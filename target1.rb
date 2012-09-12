@@ -1,0 +1,2 @@
+class TestTarget
+end
