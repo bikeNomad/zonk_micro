@@ -27,9 +27,23 @@ class TestZonkIO < MiniTest::Unit::TestCase
     output.override(false)
     assert(output.overridden?, "must show as overridden")
     assert_equal(output.value, false, "override must match")
-    output.override(nil)
+    assert_raises(SubclassResponsibility) { output.override(nil) }
     refute(output.overridden?, "must show as no longer overridden")
     assert_raises(SubclassResponsibility) { output.value }
+  end
+
+  def test_output_setting
+    output = Output.new
+    assert_equal(output.overridden?, false)
+    assert_raises(SubclassResponsibility) { output.value= true }
+    output.override(true)
+    assert_equal(output.value, true, "override must match")
+    output.value= true
+    assert_equal(output.value, true, "value override must match")
+    output.value= false
+    assert_equal(output.value, false, "value override must match")
+    assert_raises(SubclassResponsibility) { output.override(nil) }
+    assert_raises(SubclassResponsibility) { output.value= true }
   end
 
 end

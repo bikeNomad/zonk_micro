@@ -8,6 +8,8 @@ module Zonk
       subclass_responsibility
     end
 
+    attr_reader :last_value
+
   public
     def initialize
       @override = nil
@@ -15,7 +17,7 @@ module Zonk
     end
 
     def value
-      overridden? ? @override : real_value
+      @last_value = (overridden? ? @override : real_value)
     end
 
     # val_or_nil: nil: no override
@@ -38,19 +40,19 @@ module Zonk
 
   public
     def value=(val)
-      unless overridden? 
-        real_value=(val)
-      else
+      if overridden? 
         @override = val
+      else
+        self.real_value=(val)
       end
+      @last_value = val
     end
 
     def override(val_or_nil)
       return if @override == val_or_nil
-      if val_or_nil.nil?
-        real_value = @last_value
-      else
-        @last_value = real_value
+      super
+      if val_or_nil.nil?  # no longer overridden
+        self.real_value = @last_value
       end
     end
 
