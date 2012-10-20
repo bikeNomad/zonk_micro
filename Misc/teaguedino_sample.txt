@@ -1,0 +1,127 @@
+# Pseudo-text Zonk version of Basic Police Car example program from Teaguedino
+# (see http://teagueduino.org/gettingstarted )
+# Flashes red and blue LEDs at 4Hz rate while
+# producing alternating tone on speaker
+
+#########################################
+# Teaguedino version:
+#########################################
+# Setup (runs once after reset):
+#	<none>
+# Main Program (loops forever):
+# 	waituntil(In_1 > 500);
+# 	Out_A = 1 as DIG;
+# 	Out_B = 0 as DIG;
+# 	Out_C = 500 as Tone;
+# 	delay(250);
+# 	Out_A = 0 as DIG;
+# 	Out_B = 1 as DIG;
+# 	Out_C = 750 as Tone;
+# 	delay(250);
+# 	Out_C = 0 as Tone;
+
+#########################################
+# Zonk versions
+#########################################
+
+#########################################
+# Task definition, which is the
+# same for both single and multiple-table versions.
+# A task owns and can write to its outputs, timers and variables.
+# A task may also read outputs, inputs and variables
+#########################################
+task PoliceCarTask:
+	# declare a digital output and hook it to a pin
+	# also name its states for better readability
+	digital_output 	Red_LED(pinA).
+			define_name("ON", 1).
+			define_name("OFF", 0)
+
+	# Another LED
+	digital_output 	Blue_LED(pinB).
+			define_name("ON", 1).
+			define_name("OFF", 0)
+
+	# Piezo speaker
+	pwm_output	Siren(pinC).
+			define_name("HighTone", 750).
+			define_name("LowTone", 500).
+			define_name("OFF", 0)
+
+	# Timer used for alternating tones/LEDs
+	one_shot_timer	Timer1.
+			define_name("FlashPeriod", 250)
+
+	# Inputs on Teague hardware are analog?
+	analog_input	Button(pin1).
+			define_name("ON", "> 500").
+			define_name("OFF", "<= 500")
+
+#########################################
+# Zonk version 1 (single table):
+#########################################
+PoliceCarTask.first_table_is(Table1)
+
+Table1:
+	# Using idle polling
+	# condition "Button.is(OFF)" is equivalent to "pin1.value <= 500"
+	when <always> and Button.is(OFF):
+		Red_LED = OFF
+		Blue_LED = OFF
+		Siren = OFF
+		Timer1.reset
+
+	when <always> and Timer1.is_ended and Button.is(ON)
+		Timer1.start(FlashPeriod)
+
+	when Timer1.ends and Red_LED.is(ON):
+		Red_LED = OFF
+		Blue_LED = ON
+		Siren = HighTone
+
+	when Timer1.ends and Red_LED.is(OFF):
+		Red_LED = ON
+		Blue_LED = OFF
+		Siren = LowTone
+
+#########################################
+# Zonk version 2 (three tables):
+#########################################
+PoliceCarTask.first_table_is(WaitingForButtonTable)
+
+Table WaitingForButtonTable:
+	when <table_entered>:
+		Siren = OFF
+		Red_LED = OFF
+		Blue_LED = OFF
+
+	when Button.becomes(ON):
+		switch_tables_to(RedTable)
+
+Table RedTable:
+	when <table_entered>:
+		Red_LED = ON
+		Blue_LED = OFF
+		Siren = HighTone
+		Timer1.start(FlashPeriod)
+
+	# edge event detection (could also use conditions on Timer1.done; see BlueTable)
+	when Button.becomes(OFF):
+		switch_tables_to(WaitingForButtonTable)
+
+	when Timer1.done:
+		switch_tables_to(BlueTable)
+
+Table BlueTable:
+	when <table_entered>
+		Red_LED = OFF
+		Blue_LED = ON
+		Siren = LowTone
+		Timer1.start(FlashPeriod)
+
+	# Alternate way to check for button going off:
+	when Timer1.done and Button.is(OFF):
+		switch_tables_to(WaitingForButtonTable)
+
+	when Timer1.done and Button.is(ON):
+		switch_tables_to(BlueTable)

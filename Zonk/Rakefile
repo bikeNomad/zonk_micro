@@ -1,0 +1,11 @@
+# -*- ruby -*-
+
+require 'rubygems'
+require 'hoe'
+
+Hoe.spec 'Zonk' do |p|
+  # self.rubyforge_name = 'Zonkx' # if different than 'Zonk'
+  # p.developer('FIX', 'FIX@example.com')
+end
+
+# vim: syntax=ruby

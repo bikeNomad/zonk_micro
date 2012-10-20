@@ -13,10 +13,18 @@ class Input
 end
 
 class FakeInput < Input
+  def initialize
+    super
+  end
+
+  def setTo(level)
+    @value = level
+  end
 end
 
 class Output < FakeInput
   def initialize
+    super
   end
 end
 
@@ -80,7 +88,9 @@ class Task
   end
 
   def table_named(_name)
-    @tables[_name] || raise "no table named #{_name}!"
+    t = @tables[_name]
+    raise "no table named #{_name}!" if t.nil?
+    t
   end
 
   def switch_to(other_table_name)
