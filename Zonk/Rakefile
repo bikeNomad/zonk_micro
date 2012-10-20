@@ -4,8 +4,7 @@ require 'rubygems'
 require 'hoe'
 
 Hoe.spec 'Zonk' do |p|
-  # self.rubyforge_name = 'Zonkx' # if different than 'Zonk'
-  # p.developer('FIX', 'FIX@example.com')
+  p.developer('Ned Konz', 'ned-ruby@bike-nomad.com')
 end
 
 # vim: syntax=ruby

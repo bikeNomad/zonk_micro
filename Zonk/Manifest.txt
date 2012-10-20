@@ -2,6 +2,10 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
-bin/Zonk
-lib/Zonk.rb
-test/test_Zonk.rb
+lib/zonk.rb
+lib/zonk/base.rb
+lib/zonk/io.rb
+lib/zonk/table.rb
+lib/zonk/task.rb
+lib/zonk/trace.rb
+test/test_zonk.rb
