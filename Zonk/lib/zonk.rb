@@ -1,8 +1,10 @@
 require_relative 'zonk/base'
 require_relative 'zonk/io'
+require_relative 'zonk/digital_io'
 require_relative 'zonk/trace'
 require_relative 'zonk/table'
 require_relative 'zonk/task'
+require_relative 'zonk/connection'
 
 module Zonk
   VERSION = '1.0.0'

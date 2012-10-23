@@ -5,7 +5,7 @@ class TestZonkIO < MiniTest::Unit::TestCase
   include Zonk
 
   def test_input_override
-    input = Input.new
+    input = DigitalInput.new
     assert_raises(SubclassResponsibility) { input.value }
     input.override(true)
     assert_equal(input.value, true, "override must match")
@@ -19,7 +19,7 @@ class TestZonkIO < MiniTest::Unit::TestCase
   end
 
   def test_output_override
-    output = Output.new
+    output = DigitalOutput.new
     assert_raises(SubclassResponsibility) { output.value }
     output.override(true)
     assert_equal(output.value, true, "override must match")
@@ -33,7 +33,7 @@ class TestZonkIO < MiniTest::Unit::TestCase
   end
 
   def test_output_setting
-    output = Output.new
+    output = DigitalOutput.new
     assert_equal(output.overridden?, false)
     assert_raises(SubclassResponsibility) { output.value= true }
     output.override(true)
@@ -44,6 +44,14 @@ class TestZonkIO < MiniTest::Unit::TestCase
     assert_equal(output.value, false, "value override must match")
     assert_raises(SubclassResponsibility) { output.override(nil) }
     assert_raises(SubclassResponsibility) { output.value= true }
+  end
+
+  def test_output_range_check
+    output = DigitalOutput.new
+    assert_raises(ValueRangeError, "must check for valid range") { output.value= 3 }
+    output.override(true)
+    assert_raises(ValueRangeError, "must check for valid range") { output.value= 3 }
+    assert_raises(ValueRangeError, "must check for valid override range") { output.override(3) }
   end
 
 end

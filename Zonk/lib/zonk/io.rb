@@ -1,17 +1,43 @@
 # I/O base classes
-module Zonk
-  class Input
-    include Zonk
 
+require 'zonk/task'
+
+module Zonk
+  class Input < TaskPort
   protected
     def real_value
       subclass_responsibility
     end
 
+    def value_range
+      subclass_responsibility
+    end
+
+    def check_value(val)
+      if value_range.include?(val)
+        val
+      else
+        out_of_range(val, value_range, name)
+      end
+    end
+
+    def check_override_value(val)
+      return nil if val.nil?
+      return val if value_range.include?(val)
+      out_of_range(val, value_range, name + ": override")
+    end
+
     attr_reader :last_value
 
+    TaskPort.add_subclass(self)
+
   public
-    def initialize
+    def self.capabilities
+      [ :input ]
+    end
+
+    def initialize(_name = '')
+      super
       @override = nil
       @last_value = nil
     end
@@ -23,7 +49,7 @@ module Zonk
     # val_or_nil: nil: no override
     # non-nil: new value
     def override(val_or_nil)
-      @override = val_or_nil
+      @override = check_override_value(val_or_nil)
     end
 
     def overridden?
@@ -38,16 +64,23 @@ module Zonk
       subclass_responsibility
     end
 
+    TaskPort.add_subclass(self)
+
   public
+    def self.capabilities
+      [ :output, :input ]
+    end
+
     def value=(val)
       if overridden? 
-        @override = val
+        @override = check_override_value(val) 
       else
-        self.real_value=(val)
+        self.real_value=(check_value(val))
       end
       @last_value = val
     end
 
+    # Lie about output value without setting output
     def override(val_or_nil)
       return if @override == val_or_nil
       super
