@@ -9,8 +9,8 @@ module Zonk
     end
 
     def connect_outputs
-      possible_pins = @available_pins.select { |pin| }
-      connected_pins = {}
+      # possible_pins = @available_pins.select { |pin| }
+      # connected_pins = {}
       @task.outputs.each do |output|
       end
     end

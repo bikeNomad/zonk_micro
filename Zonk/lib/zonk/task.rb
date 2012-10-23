@@ -1,7 +1,10 @@
 module Zonk
   class Task
+    include Zonk
+    # return a list of ports with all of the given capabilities
     def ports_with_capabilities(*capabilities)
-      @ports.reject { |port| (port.capabilities & capabilities).empty? }
+      ncapabilities = capabilities.size
+      @ports.select { |port| (port.capabilities & capabilities).size == ncapabilities }
     end
 
     def initialize
