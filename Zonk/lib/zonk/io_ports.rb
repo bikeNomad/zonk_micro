@@ -5,7 +5,7 @@ require_relative 'ports'
 
 module Zonk # :nodoc:
 
-  class Input < TaskPort
+  class InputPort < TaskPort
   protected
     def real_value
       subclass_responsibility
@@ -57,7 +57,7 @@ module Zonk # :nodoc:
     end
   end
 
-  class Output < Input
+  class OutputPort < InputPort
   protected
     # set actual output
     def real_value=(val)

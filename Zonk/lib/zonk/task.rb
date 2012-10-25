@@ -43,7 +43,7 @@ module Zonk # :nodoc:
       current_table.enter_table
     end
 
-    # 
+    # Run this task
     def run!
     end
 
