@@ -5,7 +5,12 @@ require_relative 'zonk/trace'
 require_relative 'zonk/table'
 require_relative 'zonk/task'
 require_relative 'zonk/connection'
+require_relative 'zonk/iopins'
+require_relative 'zonk/target'
+require_relative 'zonk/application'
 
 module Zonk
   VERSION = '1.0.0'
 end
+
+include Zonk

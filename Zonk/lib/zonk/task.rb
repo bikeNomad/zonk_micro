@@ -1,5 +1,5 @@
 module Zonk
-  class Task
+  class Task < Base
     include Zonk
     # return a list of ports with all of the given capabilities
     def ports_with_capabilities(*capabilities)
@@ -8,6 +8,7 @@ module Zonk
     end
 
     def initialize
+      super
       @ports = []
       @events = []
       @tables = []

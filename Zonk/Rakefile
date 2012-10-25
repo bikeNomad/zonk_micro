@@ -7,4 +7,13 @@ Hoe.spec 'Zonk' do |p|
   p.developer('Ned Konz', 'ned-ruby@bike-nomad.com')
 end
 
+desc 'make tags for vim'
+task :tags do
+  sh('ctags -R lib test')
+end
+
+task :simple_task do
+  ruby('-Ilib:test', 'examples/simple_task.rb')
+end
+
 # vim: syntax=ruby
