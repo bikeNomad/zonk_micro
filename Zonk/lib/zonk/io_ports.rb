@@ -32,7 +32,7 @@ module Zonk # :nodoc:
     attr_reader :last_value
 
   public
-    def self.capabilities
+    def capabilities
       [ :input ]
     end
 
@@ -65,7 +65,7 @@ module Zonk # :nodoc:
     end
 
   public
-    def self.capabilities
+    def capabilities
       [ :output, :input ]
     end
 
