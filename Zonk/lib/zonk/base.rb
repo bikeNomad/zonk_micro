@@ -45,10 +45,15 @@ module Zonk
     class << self
       protected
 
+      def direct_subclasses
+        @direct_subclasses ||= []
+      end
+
       # Ensure that new subclasses are initialized correctly
       def inherited(subclass)
         super
         subclass.reset!
+        direct_subclasses << subclass
       end
 
       # make this class a singleton
@@ -57,6 +62,28 @@ module Zonk
       end
 
       public
+
+      # Return direct and indirect subclasses
+      def subclasses
+        subs = []
+        direct_subclasses.each do |k|
+          subs << k
+          subs.concat(k.subclasses)
+        end
+        subs
+      end
+
+      def indirect_subclasses
+        subclasses - direct_subclasses
+      end
+
+      def subinstances
+        subclasses.map(&:instance)
+      end
+
+      def indirect_subinstances
+        indirect_subclasses.map(&:instance)
+      end
   
       # Return the single instance of a new subclass of class 'base'.
       #
@@ -69,7 +96,6 @@ module Zonk
         newklass.class_eval("def self.to_s; \"<new #{base.to_s}>\"; end")
         newklass.class_eval do
           include(*extensions) if extensions.any?
-          # include(Singleton)
           include(Zonk)
         end
         newklass.instance.instance_eval { @name = _name }
