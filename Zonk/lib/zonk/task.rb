@@ -59,6 +59,15 @@ module Zonk # :nodoc:
       table
     end
 
+    # returns a singleton instance of subclass of Table
+    def define_table(_name, base = Table, *extensions, &block)
+      new_table = make_singleton_of(_name, base, extensions, &block)
+      self.add_table(new_table)
+      the_task = self
+      new_table.instance_eval { @owner = the_task }
+      new_table
+    end
+
   end
 
 end

@@ -67,10 +67,28 @@ class TestTasks < MiniTest::Unit::TestCase
     end
   end
 
-  def test_task_operation
+  def test_table_construction
     _t = self
     Zonk::application('myapp') do
       define_task('task1') do
+        _t.assert_empty(tables, "must have no tables yet")
+        _t.assert_nil(current_table, "must have no current table yet")
+
+        table1 = define_table('table1') do
+        end
+
+        _t.assert_equal(1, tables.size, "must have one table now")
+        _t.assert_same(self, table1.owner, "table must be owned by task")
+        # TODO
+        # _t.assert_same(current_table, table1, "table1 must be current table")
+      end
+    end
+  end
+
+  def test_task_operation
+    _t = self
+    Zonk::application('myapp') do
+      task1 = define_task('task1') do
         # self is task instance
         _t.assert_empty(ports, "must have no ports yet")
         _t.assert_empty(events, "must have no events yet")
@@ -110,7 +128,8 @@ class TestTasks < MiniTest::Unit::TestCase
         _t.assert_equal(2, inputs.size, "must have two input ports")
         _t.assert_equal(1, outputs.size, "must have one output ports")
 
-      end
+      end # define_task('task1')
+      _t.assert_same(self, task1.owner, "task must be owned by app")
     end
   end
 
