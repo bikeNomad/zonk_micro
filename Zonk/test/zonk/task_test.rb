@@ -62,6 +62,7 @@ class TestTasks < MiniTest::Unit::TestCase
       _t.refute_nil(self.target)
       _t.assert_equal(self.target, target1)
       _t.assert_raises(RuntimeError, "app must accept only one target") { define_target('extratarget') { } }
+      _t.assert_same(self, target1.owner, "target must be owned by app")
 
     end
   end

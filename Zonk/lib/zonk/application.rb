@@ -6,12 +6,16 @@ module Zonk
     def add_target(_target)
       raise "target already defined" if @target
       @target = _target
-      _target.instance_eval { @owner = self }
+      theapp = self
+      _target.instance_eval { @owner = theapp }
+      _target
     end
 
     def add_task(_task)
       @tasks << _task
-      _task.instance_eval { @owner = self }
+      theapp = self
+      _task.instance_eval { @owner = theapp }
+      _task
     end
 
     def initialize
