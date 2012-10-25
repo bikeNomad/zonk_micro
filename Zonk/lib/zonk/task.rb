@@ -43,8 +43,20 @@ module Zonk # :nodoc:
       current_table.enter_table
     end
 
-    # Run this task
-    def run!
+    def add_port(port)
+      @ports << port
+      port
+    end
+
+    def add_event(evt)
+      @events << evt
+      evt
+    end
+
+    # TODO when do we call switch_to_table()?
+    def add_table(table)
+      @tables << table
+      table
     end
 
   end

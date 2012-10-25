@@ -69,7 +69,7 @@ class TestTasks < MiniTest::Unit::TestCase
   def test_task_operation
     _t = self
     Zonk::application('myapp') do
-      task1 = define_task('task1') do
+      define_task('task1') do
         # self is task instance
         _t.assert_empty(ports, "must have no ports yet")
         _t.assert_empty(events, "must have no events yet")
@@ -84,12 +84,31 @@ class TestTasks < MiniTest::Unit::TestCase
           _t.assert_same(task_instance, self.instance, "helpers block must be class side of target")
           pre_count = self.instance_methods.count
 
-          def add_input_port(_name) add_port(Inputport.new(_name, self)) end
-          def add_output_port(_name) add_port(Outputport.new(_name, self)) end
+          def add_input_port(_name) add_port(DigitalInputPort.new(_name)) end
+          def add_output_port(_name) add_port(DigitalOutputPort.new(_name)) end
 
           post_count = self.instance_methods.count
           _t.assert_equal(pre_count + 2, post_count, "must have just added two methods to class")
         end
+
+        _t.assert_empty(outputs, "must have no output ports yet")
+        _t.assert_empty(inputs, "must have no input ports yet")
+        _t.assert_empty(timers, "must have no timers yet")
+
+        port1 = add_input_port('port1')
+        _t.assert_equal(1, ports.size, "must have one port")
+        _t.assert_same(port1, ports.first, "first port must be port1")
+
+        _t.assert_equal(1, inputs.size, "must have one input port")
+        _t.assert_equal(0, outputs.size, "must have no output ports")
+
+        # adding one output port adds 1 to both outputs and inputs
+        # counts
+        port2 = add_output_port('port2')
+
+        _t.assert_equal(2, inputs.size, "must have two input ports")
+        _t.assert_equal(1, outputs.size, "must have one output ports")
+
       end
     end
   end
