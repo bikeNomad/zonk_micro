@@ -1,10 +1,7 @@
-require_relative 'rules'
-
 module Zonk
-  # A Table is a <i>decision table</i> consisting of Rule instances
-  class Table < Base
-    include Zonk
-
+  # A Rule is a Singleton that has an Event pattern,
+  # an optional Condition, and a collection of Actions.
+  class Rule < Base
     def initialize
       super
       @rules = []
