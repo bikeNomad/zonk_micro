@@ -6,10 +6,12 @@ module Zonk
     def add_target(_target)
       raise "target already defined" if @target
       @target = _target
+      _target.instance_eval { @owner = self }
     end
 
     def add_task(_task)
       @tasks << _task
+      _task.instance_eval { @owner = self }
     end
 
     def initialize
@@ -32,14 +34,14 @@ module Zonk
     attr_reader :tasks, :target
 
     # returns a singleton instance of subclass of Task
-    def task(_name, base = Task, *extensions, &block)
+    def define_task(_name, base = Task, *extensions, &block)
       newtask = make_singleton_of(_name, base, extensions, &block)
       self.add_task(newtask)
       newtask
     end
 
     # returns a singleton instance of subclass of Target
-    def target(_name, base = Target, *extensions, &block)
+    def define_target(_name, base = Target, *extensions, &block)
       newtarget = make_singleton_of(_name, base, extensions, &block)
       self.add_target(newtarget)
       newtarget

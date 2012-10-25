@@ -5,7 +5,7 @@ module Zonk
 
     def initialize(_name, _target)
       @name = _name
-      @target = nil
+      @target = _target
     end
 
     attr_reader :name, :target
@@ -16,9 +16,15 @@ module Zonk
   end
 
   class InputPin < Pin
+    def capabilities
+      [ :input ]
+    end
   end
 
-  class OutputPin < Pin
+  class OutputPin < InputPin
+    def capabilities
+      [ :output, :input ]
+    end
   end
 
 end

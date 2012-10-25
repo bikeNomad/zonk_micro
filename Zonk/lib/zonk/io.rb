@@ -1,8 +1,10 @@
-# I/O base classes
+# :title: I/O base classes
 
-require 'zonk/task'
+require_relative 'task'
+require_relative 'ports'
 
-module Zonk
+module Zonk # :nodoc:
+
   class Input < TaskPort
   protected
     def real_value
@@ -28,8 +30,6 @@ module Zonk
     end
 
     attr_reader :last_value
-
-    TaskPort.add_subclass(self)
 
   public
     def self.capabilities
@@ -63,8 +63,6 @@ module Zonk
     def real_value=(val)
       subclass_responsibility
     end
-
-    TaskPort.add_subclass(self)
 
   public
     def self.capabilities

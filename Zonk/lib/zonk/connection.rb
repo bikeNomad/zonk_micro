@@ -1,5 +1,5 @@
-# Connects a Zonk Task to a Target
 module Zonk
+  # Connects a Zonk Task to a Target
   class TaskToTargetConnection
     def initialize(_task, _target)
       @task = _task

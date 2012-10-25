@@ -1,4 +1,4 @@
-# Zonk basic structure
+# :title: Zonk Infrastructure
 require 'singleton'
 
 module Zonk
@@ -38,36 +38,39 @@ module Zonk
     end
   end
 
-  # Base class for customizable parts like Task, Target, and Table
+  # \Base class for customizable parts like Task, Target, and Table
   class Base
     include Zonk
 
-    # protected class-side methods
     class << self
-    protected
+      protected
+
       # Ensure that new subclasses are initialized correctly
       def inherited(subclass)
-        subclass.reset!
         super
+        subclass.reset!
       end
 
       # make this class a singleton
       def reset!
-        include Singleton
+        include Singleton unless self.ancestors.include?(Singleton)
       end
 
-    public
-    # public class-side methods
+      public
   
-      # return the single instance of a new subclass of class 'base'
-      # extended by modules given in 'extensions' (if any)
-      # as well as methods defined in the optional block
+      # Return the single instance of a new subclass of class 'base'.
+      #
+      # The new subclass is extended by modules given in 'extensions' (if any),
+      # then it is made into a singleton instance.
+      #
+      # The singleton instance then is named as _name, and evaluates the optional block.
       def make_singleton_of(_name, base, extensions, &block)
         newklass = Class.new(base)
         newklass.class_eval("def self.to_s; \"<new #{base.to_s}>\"; end")
         newklass.class_eval do
           include(*extensions) if extensions.any?
-          include(Singleton)
+          # include(Singleton)
+          include(Zonk)
         end
         newklass.instance.instance_eval { @name = _name }
         newklass.instance.instance_eval(&block) if block_given?
@@ -75,7 +78,7 @@ module Zonk
       end
 
       # Makes the methods defined in the block and in the Modules given
-      # in 'extensions' available globally
+      # in 'extensions' available in this class
       def helpers(*extensions, &block)
         class_eval(&block)   if block_given?
         include(*extensions) if extensions.any?
@@ -93,14 +96,22 @@ module Zonk
       self.class.make_singleton_of(_name, base, extensions, &block)
     end
 
-    self.reset!
+    # self.reset!
 
-    public
-    def initialize
+    def initialize  # :notnew: :nodoc:
       @name = nil
+      @owner = nil
     end
 
-    attr_accessor :name
+    public
+
+    attr_accessor :name, :owner
+
+    # Makes the methods defined in the block and in the Modules given
+    # in 'extensions' available in this class
+    def helpers(*extensions, &block)
+      self.class.helpers(*extensions, &block)
+    end
 
   end # Zonk::Base
 
