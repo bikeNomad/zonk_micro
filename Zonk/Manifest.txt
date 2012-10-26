@@ -1,6 +1,6 @@
-History.rd
+History.txt
 Manifest.txt
-README.rd
+README.txt
 Rakefile
 bin/zonk
 examples/simple_task.rb

@@ -1,10 +1,20 @@
-# -*- ruby -*-
-
 require 'rubygems'
 require 'hoe'
+require 'pp'
+
+Hoe.add_include_dirs('server')
 
 Hoe.spec 'Zonk' do |p|
   p.developer('Ned Konz', 'ned-ruby@bike-nomad.com')
+  p.dependency('sinatra', '~>1.3')
+  p.license('MIT')
+  p.rubyforge_name='bikeNomad'
+  p.spec_extras = {
+    :rdoc_options => lambda { |o| o.concat(%w[-f hanna]) },
+    :require_paths => %w[lib server test]
+  }
+  p.testlib = :minitest
+  # pp p.spec unless p.spec.nil?
 end
 
 desc 'make tags for vim'
@@ -12,6 +22,7 @@ task :tags do
   sh('ctags -R lib test')
 end
 
+desc 'run a simple task'
 task :simple_task do
   ruby('-Ilib:test', 'examples/simple_task.rb')
 end
