@@ -123,7 +123,7 @@ class TestTasks < MiniTest::Unit::TestCase
 
         # adding one output port adds 1 to both outputs and inputs
         # counts
-        port2 = add_output_port('port2')
+        add_output_port('port2')
 
         _t.assert_equal(2, inputs.size, "must have two input ports")
         _t.assert_equal(1, outputs.size, "must have one output ports")
