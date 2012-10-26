@@ -1,6 +1,6 @@
-History.txt
+History.rd
 Manifest.txt
-README.txt
+README.rd
 Rakefile
 bin/zonk
 examples/simple_task.rb
@@ -9,8 +9,14 @@ lib/zonk/application.rb
 lib/zonk/base.rb
 lib/zonk/connection.rb
 lib/zonk/digital_io.rb
+lib/zonk/digital_io_ports.rb
+lib/zonk/events.rb
 lib/zonk/io.rb
+lib/zonk/io_pins.rb
+lib/zonk/io_ports.rb
 lib/zonk/iopins.rb
+lib/zonk/ports.rb
+lib/zonk/rules.rb
 lib/zonk/table.rb
 lib/zonk/target.rb
 lib/zonk/task.rb
@@ -19,4 +25,5 @@ server/zonk_server.rb
 test/test_zonk.rb
 test/zonk/connection_test.rb
 test/zonk/digital_io_test.rb
+test/zonk/event_test.rb
 test/zonk/task_test.rb

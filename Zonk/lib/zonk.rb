@@ -14,7 +14,7 @@ require_relative 'zonk/application'
 
 # Namespace for all Zonk classes
 module Zonk
-  VERSION = '1.0.0'
+  VERSION = '0.1.0'
 end
 
 include Zonk

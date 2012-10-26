@@ -1,26 +1,29 @@
 = Zonk
 
-* http://nedkonz.com/ (url)
+* More information eventually at the {Zonk Homepage}[http://nedkonz.com/zonk]
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Zonk is an open-source microcontroller programming system for non-programmers
+(or people who don't want to learn to be programmers).
+
+Eventually Zonk will have:
+* Web-based IDE for programming and debugging
+* Support for both PC-based (via data acquisition modules) and autonomous (microcontroller-resident) operation
+* Ability to re-use task code directly on other targets
+* Fine-grained simulation allowing simulated I/O and/or use of target hardware as an I/O slave
+* Simple rule-based programming, visible and editable as tables or text
+* Easy support of concurrency and stateful behavior
+* Post-mortem and real-time trace data collection
+* Ability to answer "why did..." and "why didn't..." questions about program behavior
+* Assistance for target connection to the real world
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
-
-== SYNOPSIS:
-
-  FIX (code sample of usage)
-
 == REQUIREMENTS:
 
-* FIX (list of requirements)
-
-== INSTALL:
-
-* FIX (sudo gem install, anything else)
+* Ruby 1.9
+* Sinatra gem
 
 == LICENSE:
 
