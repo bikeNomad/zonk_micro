@@ -116,7 +116,8 @@ class TestTasks < MiniTest::Unit::TestCase
 
         port1 = add_input_port('port1')
         _t.assert_equal(1, ports.size, "must have one port")
-        _t.assert_same(port1, ports.first, "first port must be port1")
+        _t.assert_same(port1, ports.first[1], "first port must be port1")
+        _t.assert_same(port1, port('port1'), "port must be findable")
 
         _t.assert_equal(1, inputs.size, "must have one input port")
         _t.assert_equal(0, outputs.size, "must have no output ports")

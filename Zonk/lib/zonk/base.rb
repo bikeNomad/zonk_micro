@@ -131,7 +131,7 @@ module Zonk
 
     public
 
-    attr_accessor :name, :owner
+    attr_reader :name, :owner
 
     # Makes the methods defined in the block and in the Modules given
     # in 'extensions' available in this class

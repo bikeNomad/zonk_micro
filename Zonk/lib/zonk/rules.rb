@@ -10,5 +10,20 @@ module Zonk
     end
 
     attr_reader :event_pattern, :condition, :actions
+
+    alias :table :owner
+
+    def task
+      table.owner
+    end
+
+    def on_event(_source, _kind)
+      @event_pattern = EventPattern.new(_source, _kind)
+    end
+
+    def if_condition(cond)
+      @condition = cond
+    end
+
   end
 end
