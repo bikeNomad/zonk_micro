@@ -1,5 +1,6 @@
 # :title: Zonk Infrastructure
 require 'singleton'
+require 'pp'
 
 module Zonk
   # Error raised for missing methods
@@ -93,12 +94,29 @@ module Zonk
       # The singleton instance then is named as _name, and evaluates the optional block.
       def make_singleton_of(_name, base, extensions, &block)
         newklass = Class.new(base)
-        newklass.class_eval("def self.to_s; \"<new #{base.to_s}>\"; end")
+        newklass.class_eval <<EOF
+          def self.to_s
+            "#<#{base.to_s}:<#{_name}>>"
+          end
+          def self.inspect
+            "#<#{base.to_s}:<#{_name}>>"
+          end
+EOF
         newklass.class_eval do
-          include(*extensions) if extensions.any?
+          def inspect
+            ary = []
+            for iv in instance_variables
+              iv = iv.to_s
+              ary.push format("%s=%s", iv, eval(iv).to_s)
+            end
+            format("#<%s: %s>", self.class, ary.join(", "))
+          end
           include(Zonk)
+          include(*extensions) if extensions.any?
         end
-        newklass.instance.instance_eval { @name = _name }
+        newklass.instance.instance_eval do
+          @name = _name
+        end
         newklass.instance.instance_eval(&block) if block_given?
         newklass.instance
       end

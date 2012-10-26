@@ -7,24 +7,12 @@ module Zonk
 
     def initialize
       super
-      # a Proc which can handle events
-      @rules = nil
+      @rules = []
     end
+
+    attr_reader :rules
 
     alias :task :owner
-
-    # Set my rules to the given block,
-    # or return my rules proc
-    def rules
-      if block_given?
-        new_rules = Proc.new
-        raise "rules block must take one parameter" if new_rules.arity != 1
-        raise "rules already defined" if @rules
-        @rules = new_rules
-      else
-        @rules
-      end
-    end
 
     # called upon entry to the table
     def enter_table
@@ -36,8 +24,15 @@ module Zonk
       # TODO enqueue table exit event
     end
 
+    # pass the given event 'evt' through my rules block
     def process_event(evt)
-      @rules.call(evt)  if @rules
+      return unless @rules
+      matched = @rules.detect { |rule| rule.match_event(evt) }
+      unless matched
+        message("#{evt.inspect} not matched")
+        return
+      end
+      matched.do_actions_for(evt)
     end
 
     # Return my task's port with the given _name
@@ -45,8 +40,14 @@ module Zonk
       task.port(_name)
     end
 
+    # enqueue a message onto my task's message queue
     def message(*args)
-      task.message(*args)
+      task.message("#{name}: " + sprintf(*args))
+    end
+
+    # Add a single rule
+    def on_event(_src, _kind, *_conds, &block)
+      @rules << Rule.new(_src, _kind, _conds, &block)
     end
 
   end

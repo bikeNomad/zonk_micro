@@ -2,35 +2,26 @@ require 'pp'
 require "zonk"
 
 $app=
-  Zonk::application('myapp') do
-  # self is the Application
-  # Task1
-  define_task('task1') do
-    # self is the Task
-    $input1 =
-      add_digital_input_port('input1')
-    $output1 =
-      add_digital_output_port('output1')
+Zonk::application('myapp') do # self is the Application
 
-    # Table1
-    define_table('table1') do
-      # self is the Table
-      rules do |evt|
-        # self is the Table
-        case evt
-        when EventPattern.new(port('input1'), :went_high)
-          message("in first rule")
-          # TODO make output of #is_high, etc. into objects?
-        when EventPattern.new(port('input1'), :went_low)
-          message("in second rule")
-        else
-          message("no match")
-        end
+  define_task('task1') do # self is the Task
+    add_digital_input_port('input1')
+    add_digital_output_port('output1')
+    add_digital_output_port('output2')
+
+    define_table('table1') do # self is the Table
+      # Rule 1
+      on_event(port('input1'), :went_high,
+               port('output1'), :on?,
+               port('output2'), :on?) do
+        puts "in on_event: self=#{self.to_s}"
+        message("in first rule")
       end
+
     end
   end
 
-  define_target('testtarget') do
+  define_target('testtarget') do  # self is the Target
     helpers do
       def add_input_pin(_name) add_pin(InputPin.new(_name, self)) end
       def add_output_pin(_name) add_pin(OutputPin.new(_name, self)) end
@@ -40,10 +31,14 @@ $app=
     add_output_pin("pin2")
   end
 
+  # TODO connect pins to ports
+
 end
 
 $task = $app.tasks.first
 $table = $task.tables.first
+$input1 = $task.port('input1')
+$output1 = $task.port('output1')
 $input1.override(false)
 $output1.override(false)
 $thread1 = $task.run!

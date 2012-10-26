@@ -1,29 +1,26 @@
 module Zonk
-  # A Rule is a Singleton that has an EventPattern,
+  # A Rule is an object that has an EventPattern,
   # an optional Condition, and a collection of Actions.
-  class Rule < Base
-    def initialize
-      super
-      @event_pattern = nil
-      @condition = nil
-      @actions = []
+  class Rule
+    def make_conditions(arr)
+      arr.flatten.each_slice(2).collect do |rcvr,sel|
+        Condition.new(rcvr, sel.to_sym)
+      end
     end
 
-    attr_reader :event_pattern, :condition, :actions
-
-    alias :table :owner
-
-    def task
-      table.owner
+    def initialize(_src, _kind, *_conds, &block)
+      @pattern = EventPattern.new(_src, _kind)
+      @actions = block
+      @condition = CompositeCondition.new(*make_conditions(_conds))
     end
 
-    def on_event(_source, _kind)
-      @event_pattern = EventPattern.new(_source, _kind)
+    def match_event(evt)
+      @pattern === evt
     end
 
-    def if_condition(cond)
-      @condition = cond
+    def do_actions_for(evt)
+      @actions.call(evt)
     end
-
   end
+
 end
