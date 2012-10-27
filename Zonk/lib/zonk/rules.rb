@@ -14,8 +14,14 @@ module Zonk
       @condition = CompositeCondition.new(*make_conditions(_conds))
     end
 
+    attr_reader :pattern, :actions, :condition
+
+    # TODO combine match_event and do_actions_for?
+
+    # Return true if Event 'evt' matches my event pattern
+    # and my condition (which is possibly empty) is not false
     def match_event(evt)
-      @pattern === evt
+      @pattern.match_event(evt) && @condition.value
     end
 
     def do_actions_for(evt)

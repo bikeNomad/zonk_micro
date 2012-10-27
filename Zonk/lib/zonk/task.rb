@@ -94,6 +94,12 @@ module Zonk # :nodoc:
       ports_with_capabilities(:timer)
     end
 
+    # Return all of the event patterns from my current table
+    def event_patterns
+      return [] if current_table.nil?
+      current_table.event_patterns
+    end
+
     # Change the current table to 'table'.
     def switch_to_table(table)
       current_table.exit_table unless current_table.nil?

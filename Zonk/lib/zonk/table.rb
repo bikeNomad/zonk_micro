@@ -24,6 +24,16 @@ module Zonk
       # TODO enqueue table exit event
     end
 
+    # Return all of my unique event patterns
+    def event_patterns
+      h = {}
+      rules.each do |rule|
+        p = rule.pattern
+        h[p.to_a] = p
+      end
+      h.values
+    end
+
     # pass the given event 'evt' through my rules block
     def process_event(evt)
       return unless @rules

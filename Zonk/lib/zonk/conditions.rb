@@ -1,8 +1,10 @@
 module Zonk
   # A CompositeCondition is an AND-combination of Conditions.
+  # An empty CompositeCondition will evaluate as true.
   class CompositeCondition
     def initialize(*conds)
       @conditions = conds
+      self
     end
 
     attr_reader :conditions
@@ -22,6 +24,7 @@ module Zonk
       else
         raise "can't happen"
       end
+      self
     end
 
     alias :and :&
@@ -31,6 +34,7 @@ module Zonk
       @conditions.all? { |cond| cond.value }
     end
 
+    # compare with bool
     def ===(bool)
       value == bool
     end
@@ -45,7 +49,7 @@ module Zonk
 
     def value
       begin
-        @method.call
+        @method.call == true
       rescue
         $stderr.puts("Exception #{$!} evaluating #{@method} receiver #{@method.receiver}")
         false
@@ -53,11 +57,16 @@ module Zonk
     end
 
     def ===(bool)
+      value == bool
     end
 
     def &(other)
+      return CompositeCondition.new(self, other)
     end
 
+    # NOTE that you can't just go
+    # c1 and c2
+    # and expect it to work!
     alias :and :&
   end
 end

@@ -14,7 +14,13 @@ Zonk::application('myapp') do # self is the Application
       on_event(port('input1'), :went_high,
                port('output1'), :on?,
                port('output2'), :on?) do
-        puts "in on_event: self=#{self.to_s}"
+        message("in first rule")
+      end
+
+      # Rule 2
+      on_event(port('input1'), :went_high,
+               port('output1'), :on?,
+               port('output2'), :on?) do
         message("in first rule")
       end
 

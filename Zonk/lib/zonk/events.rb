@@ -8,18 +8,28 @@ module Zonk
     def initialize(_source, _kind)
       @source = _source
       @kinds = _kind
-      # define :=== for collections, etc.
-      if @kinds.respond_to?(:include?)
-        @kinds.instance_eval { def ===(other) self.include?(other) end }
-      end
     end
 
     attr_reader :source, :kinds
 
     # Returns true if both the source and kind of evt
     # match my source and kinds patterns.
-    def ===(evt)
-      @source === evt.source && @kinds === evt.kind
+    def match_event(evt)
+      return false unless @source === evt.source
+      if @kinds.respond_to?(:include?)
+        @kinds.include?(evt.kind)
+      else
+        @kinds === evt.kind
+      end
+    end
+
+    def ===(other)
+      return false unless other.class == self.class
+      @source === other.source && @kinds === other.kinds
+    end
+
+    def to_a
+      [ @source, @kinds ]
     end
   end
 
