@@ -42,11 +42,11 @@ module Zonk
     # _source:: the reporter or source of the Event
     # _kind:: the kind of event
     # _data:: optional data attached to the Event
-    def initialize(_source, _kind, _data=nil)
+    def initialize(_source, _kind, _detected=Time.now, _data=nil)
       @source = _source
       @kind = _kind
+      @timestamp = _detected
       @data = _data
-      @timestamp = Time.now
     end
 
     # Compare Event timestamps numerically
