@@ -147,6 +147,18 @@ module Zonk # :nodoc:
       add_port(DigitalOutputPort.new(_name))
     end
 
+    def add_ticker(_name, _period)
+      t = Ticker.new(_name, _period)
+      @timers << t
+      t
+    end
+
+    def add_timer(_name, _period)
+      t = Timer.new(_name, _period)
+      @timers << t
+      t
+    end
+
   end
 
 end
