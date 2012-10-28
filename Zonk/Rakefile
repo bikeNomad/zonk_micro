@@ -23,8 +23,20 @@ task :tags do
 end
 
 desc 'run a simple task'
-task :simple_task do
+task :simple do
   ruby('-Ilib:test', 'examples/simple_task.rb')
+end
+
+desc 'make coverage report'
+task :simplecov do
+  tests = ['rubygems', 'minitest/autorun']
+  tests.concat(Dir.glob("test/**/*.rb"))
+  tests.map! { |f| %(require "#{f}") }
+  sh "ruby -w -I.:lib:test -e 'require \"rubygems\"; require \"simplecov\"'" +
+    " -e 'SimpleCov.command_name \"test:lib\"; SimpleCov.add_filter \"/test/\"; SimpleCov.start'" +
+    " -e 'require \"minitest/autorun\"'" +
+    " -e '#{tests.join("; ")}'"
+
 end
 
 # vim: syntax=ruby
