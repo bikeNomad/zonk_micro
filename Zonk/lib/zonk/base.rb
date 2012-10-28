@@ -145,6 +145,12 @@ EOF
     def initialize  # :notnew: :nodoc:
       @name = nil
       @owner = nil
+
+      initialize_target
+    end
+
+    # defined in subclasses by target modules
+    def initialize_target
     end
 
     public

@@ -11,73 +11,23 @@ module Zonk # :nodoc:
       @ports.values.select { |port| (port.capabilities & capabilities).size == ncapabilities }
     end
 
-    # Enqueue the given event for later processing
-    def add_event(evt)
-      @events << evt
-      evt
-    end
-
-    def message(*args)
-      msg = sprintf(*args)
-      @messages << msg
-      msg
-    end
-
-    # Process each event off my queue
-    def run!
-      raise "already running" if @running || @thread
-      raise "no tables" if @tables.empty?
-      @thread = Thread.new do
-        begin
-          message("Task #{name} thread started")
-          switch_to_table(@tables.first)
-          @running = true
-          while @running do
-            evt = @events.pop
-            begin
-              current_table.process_event(evt)
-            rescue => exc
-              # TODO wrap this into an Event
-              add_event(exc)
-              message("Task #{name} thread exception: #{exc.message}")
-              break
-            end
-            Thread.pass
-          end
-        ensure
-          @running = false
-          @thread = nil
-        end
-        message("Task #{name} thread ended")
-      end
-    end
-
-    # Ask my thread to terminate
-    def terminate!
-      return unless @running && @thread
-      message("#{name}: asking #{@thread} to die")
-      @running = false
-    end
-
     def initialize
       super
       # Hash of ports
       # portname => TaskPort
       @ports = {}
-      # Queue of incoming events
-      @events = Queue.new
-      @messages = Queue.new
-      # My tables
+      # My table definitions
       @tables = []
-      # Which table is current
-      @current_table = nil
-      @thread = nil
-      @running = false
+      # My timer definitions
+      @timers = []
     end
+
+    # :section: Structure Queries
+    # These methods answer construction-time queries
 
     alias :application :owner
 
-    attr_reader :ports, :events, :tables, :current_table, :running, :thread, :messages
+    attr_reader :ports, :tables, :timers
 
     # Return all of my ports that are output-capable.
     def outputs
@@ -89,23 +39,22 @@ module Zonk # :nodoc:
       ports_with_capabilities(:input)
     end
 
-    # Return all of my ports that are timer-capable.
-    def timers
-      ports_with_capabilities(:timer)
-    end
-
     # Return all of the event patterns from my current table
     def event_patterns
       return [] if current_table.nil?
       current_table.event_patterns
     end
 
-    # Change the current table to 'table'.
-    def switch_to_table(table)
-      current_table.exit_table unless current_table.nil?
-      @current_table = table
-      current_table.enter_table
+    # Return my port with the given _name, or nil
+    def port_named(_name)
+      @ports[_name]
     end
+
+    # Alias for easier typing
+    alias :port :port_named
+
+    # :section: Task Definition
+    # These methods build the structures that define a Task
 
     # Add the given port
     def add_port(port)
@@ -118,14 +67,6 @@ module Zonk # :nodoc:
       @tables << table
       table
     end
-
-    # Return my port with the given _name, or nil
-    def port_named(_name)
-      @ports[_name]
-    end
-
-    # Alias for easier typing
-    alias :port :port_named
 
     # Returns a singleton instance of subclass of Table
     def define_table(_name, base = Table, *extensions, &block)
@@ -147,12 +88,14 @@ module Zonk # :nodoc:
       add_port(DigitalOutputPort.new(_name))
     end
 
+    # Add a Ticker
     def add_ticker(_name, _period)
       t = Ticker.new(_name, _period)
       @timers << t
       t
     end
 
+    # Add a Timer
     def add_timer(_name, _period)
       t = Timer.new(_name, _period)
       @timers << t

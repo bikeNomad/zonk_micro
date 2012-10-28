@@ -1,5 +1,6 @@
 require 'pp'
 require "zonk"
+require "zonk/targets/host_simulation"
 
 $app=
 Zonk::application('myapp') do # self is the Application

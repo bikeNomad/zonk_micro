@@ -1,7 +1,14 @@
 
 module Zonk
+
+  # An Application is the representation of a Zonk program.
   class Application < Base
     include Zonk
+
+    # :section: Application Definition
+    # These methods assist with the compile-time structure building
+
+    protected
 
     def add_target(_target)
       raise "target already defined" if @target
@@ -25,6 +32,8 @@ module Zonk
       @pin_map = {}
       @port_map = {}
     end
+
+    public
 
     # _pinname is the name of a pin in my target
     # _port is 

@@ -5,6 +5,12 @@ module Zonk # :nodoc:
   # It is possible to have an output TaskPort that is not connected.
   class TaskPort
     include Zonk
+    protected
+
+    def initialize_target
+    end
+
+    public
 
     def capabilities
       subclass_responsibility
@@ -12,6 +18,7 @@ module Zonk # :nodoc:
 
     def initialize(_name = '')
       @name = _name
+      initialize_target
     end
 
     attr_reader :name

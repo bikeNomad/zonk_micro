@@ -1,5 +1,6 @@
 require "minitest/autorun"
 require "zonk"
+require "zonk/targets/host"
 
 class TestRules < MiniTest::Unit::TestCase
   include Zonk
