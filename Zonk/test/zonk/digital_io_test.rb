@@ -54,4 +54,21 @@ class TestZonkIO < MiniTest::Unit::TestCase
     assert_raises(ValueRangeError, "must check for valid override range") { output.override(3) }
   end
 
+
+  class XXOPort < OutputPort
+    public :real_value, :real_value=, :value_range, :capabilities
+  end
+  class XXPort < TaskPort
+    public :capabilities
+  end
+
+  def test_subclass_responsibility
+    p = XXPort.new
+    assert_raises(SubclassResponsibility) { p.capabilities }
+    p = XXOPort.new
+    assert_raises(SubclassResponsibility) { p.value_range }
+    assert_raises(SubclassResponsibility) { p.real_value }
+    assert_raises(SubclassResponsibility) { p.real_value=3 }
+  end
+
 end
