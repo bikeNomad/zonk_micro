@@ -44,7 +44,7 @@ module Zonk # :nodoc:
       @thread = Thread.new do
         begin
           message("Task #{name} thread started")
-          switch_to_table(@tables.first)
+          switch_to_table(tables.first)
           @running = true
           while @running do
             evt = @events.pop

@@ -13,16 +13,17 @@ Zonk::application('myapp') do # self is the Application
     define_table('table1') do # self is the Table
       # Rule 1
       on_event(port('input1'), :went_high,
-               port('output1'), :on?,
-               port('output2'), :on?) do
+               port('output1'), :off?,
+               port('output2'), :off?) do
         message("in first rule")
+        set_port_value(port('output2'), true)
       end
 
       # Rule 2
       on_event(port('input1'), :went_high,
-               port('output1'), :on?,
                port('output2'), :on?) do
-        message("in first rule")
+        message("in second rule")
+        set_port_value(port('output2'), false)
       end
 
     end
@@ -46,8 +47,6 @@ $task = $app.tasks.first
 $table = $task.tables.first
 $input1 = $task.port('input1')
 $output1 = $task.port('output1')
-$input1.override(false)
-$output1.override(false)
 $thread1 = $task.run!
 $task.add_event(Event.new($input1, :went_high))
 sleep(3)

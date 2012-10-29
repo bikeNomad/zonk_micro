@@ -5,6 +5,8 @@ module Zonk # :nodoc:
   # least one Table.
   class Task < Base
     include Zonk
+    # :section: Compilation and Introspection
+
     # Return a list of ports with all of the given capabilities
     def ports_with_capabilities(*capabilities)
       ncapabilities = capabilities.size
@@ -17,9 +19,10 @@ module Zonk # :nodoc:
       # portname => TaskPort
       @ports = {}
       # My table definitions
-      @tables = []
+      @tables = {}
       # My timer definitions
-      @timers = []
+      # name => Timer/Ticker
+      @timers = {}
     end
 
     # :section: Structure Queries
@@ -27,7 +30,21 @@ module Zonk # :nodoc:
 
     alias :application :owner
 
-    attr_reader :ports, :tables, :timers
+    def tables
+      @tables.values
+    end
+
+    def table_names
+      @tables.keys
+    end
+
+    def timer_names
+      @timers.keys
+    end
+
+    def timers
+      @timers.values
+    end
 
     # Return all of my ports that are output-capable.
     def outputs
@@ -39,6 +56,14 @@ module Zonk # :nodoc:
       ports_with_capabilities(:input)
     end
 
+    def ports
+      @ports.values
+    end
+
+    def port_names
+      @ports.keys
+    end
+
     # Return all of the event patterns from my current table
     def event_patterns
       return [] if current_table.nil?
@@ -47,24 +72,32 @@ module Zonk # :nodoc:
 
     # Return my port with the given _name, or nil
     def port_named(_name)
-      @ports[_name]
+      @ports[_name.to_s]
     end
 
     # Alias for easier typing
     alias :port :port_named
+
+    def table_named(_name)
+      @tables[_name.to_s]
+    end
+
+    def timer_named(_name)
+      @timers[_name.to_s]
+    end
 
     # :section: Task Definition
     # These methods build the structures that define a Task
 
     # Add the given port
     def add_port(port)
-      @ports[port.name] = port
+      @ports[port.name.to_s] = port
       port
     end
 
     # Add the given table
     def add_table(table)
-      @tables << table
+      @tables[table.name.to_s] = table
       table
     end
 
@@ -90,15 +123,17 @@ module Zonk # :nodoc:
 
     # Add a Ticker
     def add_ticker(_name, _period)
+      _name = _name.to_s
       t = Ticker.new(_name, _period)
-      @timers << t
+      @timers[_name] = t
       t
     end
 
     # Add a Timer
     def add_timer(_name, _period)
+      _name = _name.to_s
       t = Timer.new(_name, _period)
-      @timers << t
+      @timers[_name] = t
       t
     end
 
