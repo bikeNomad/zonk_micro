@@ -54,7 +54,7 @@ module Zonk
                 def as_args
                     retval = [primitive_condition.as_args]
                     acs.elements.each { |e| retval << e.as_args }
-                    retval.flatten
+                    retval
                 end
             }
         end

@@ -176,9 +176,7 @@ class RuleNode < ZonkGrammarNode
     super
     printf("%s.set_event(%s)\n", name.text_value, event.as_args.map(&:inspect).join(', '))
     printf("%s.set_conditions(%s)\n", name.text_value, condition.as_args.map(&:inspect).join(', '))
-    printf("%s.add_actions(%s)\n",
-                         name.text_value,
-                         actions.elements.collect { |act| act.as_args }.map { |a| a.inspect }.join(", "))
+    printf("%s.add_actions(%s)\n", name.text_value, actions.elements.map(&:as_args).map(&:inspect).join(", "))
   end
 end
 

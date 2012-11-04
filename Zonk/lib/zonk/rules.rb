@@ -6,7 +6,7 @@ module Zonk
     # :section: Compilation
 
     def make_conditions(arr)
-      arr.flatten.each_slice(2).collect do |rcvr,sel|
+      arr.collect do |rcvr,sel|
         Condition.new(port(rcvr), sel.to_sym)
       end
     end
