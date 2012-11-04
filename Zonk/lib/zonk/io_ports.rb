@@ -20,7 +20,7 @@ module Zonk # :nodoc:
       [ :input ]
     end
 
-    def initialize(_name = '')
+    def initialize(_name = '', _owner = '')
       super
     end
 

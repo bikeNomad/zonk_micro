@@ -1,14 +1,21 @@
+# Demo application
 application myapp {
+# first task
   task task1 {
+  # ports
     digital_input   input1
     digital_output  output1
     digital_output  output2
+    # table
     table table1 {
       # First rule
       rule rule1 {
-        when input1 goesON
-        if output1 isOFF
-          and output2 isOFF
+        # event
+        when input1 is_on
+        # conditions
+        if output1 is_off
+          and output2 is_off
+        # actions
         then {
         }
       }

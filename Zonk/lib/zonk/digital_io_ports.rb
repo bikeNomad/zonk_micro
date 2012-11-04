@@ -11,9 +11,13 @@ module Zonk
       value == true
     end
 
+    alias :is_on :on?
+
     def off?
       value == false
     end
+
+    alias :is_off :off?
 
   end
 
@@ -27,9 +31,13 @@ module Zonk
       value == true
     end
 
+    alias :is_on :on?
+
     def off?
       value == false
     end
+
+    alias :is_off :off?
 
   end
 

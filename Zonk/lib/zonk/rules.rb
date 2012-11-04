@@ -3,12 +3,22 @@ module Zonk
   # an optional Condition, and a collection of Actions.
   class Rule < Base
     protected
-
     # :section: Compilation
 
     def make_conditions(arr)
       arr.flatten.each_slice(2).collect do |rcvr,sel|
-        Condition.new(rcvr, sel.to_sym)
+        Condition.new(port(rcvr), sel.to_sym)
+      end
+    end
+
+    def port(s)
+      case s
+      when TaskPort
+        s
+      when String
+        task.port_named(s)
+      else
+        raise "don't know how to make #{s} into a TaskPort"
       end
     end
 
@@ -29,7 +39,7 @@ module Zonk
     end
 
     def set_event(_src, _kind)
-      @pattern = EventPattern.new(_src, _kind)
+      @pattern = EventPattern.new(port(_src), _kind)
     end
 
     def set_conditions(*_conds)
@@ -37,9 +47,14 @@ module Zonk
     end
 
     attr_reader :pattern, :actions, :condition
+    alias :table :owner
 
     def add_action(*args)
       @actions << args
+    end
+
+    def task
+      table.task
     end
 
   end
