@@ -57,7 +57,7 @@ module Zonk
       begin
         @method.call == true
       rescue
-        $stderr.puts("Exception #{$!} evaluating #{@method} receiver #{@method.receiver}")
+        # $stderr.puts("Exception #{$!} evaluating #{@method} receiver #{@method.receiver}")
         false
       end
     end

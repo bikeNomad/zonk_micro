@@ -15,7 +15,6 @@ Hoe.spec 'Zonk' do |p|
     :require_paths => %w[lib server test]
   }
   p.testlib = :minitest
-  # pp p.spec unless p.spec.nil?
   p.clean_globs = %w(lib/zonk/grammar.rb examples/simple_task.rb)
 end
 

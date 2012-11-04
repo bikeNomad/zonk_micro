@@ -43,7 +43,7 @@ module Zonk
             name rs word ''
             {
                 def as_args
-                    ["'#{elements[0].text_value}'", ":#{word.text_value}"]
+                    [elements[0].text_value, word.text_value]
                 end
             }
         end
@@ -78,10 +78,10 @@ module Zonk
         end
 
         rule action
-            name os '=' os rstate
+            os name os '=' os rstate
             {
                 def as_args
-                    ["port_named(#{name.text_value})", ":#{rstate.text_value}"]
+                    [ name.text_value, rstate.text_value ]
                 end
             }
         end

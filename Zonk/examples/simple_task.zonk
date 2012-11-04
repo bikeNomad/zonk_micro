@@ -17,6 +17,8 @@ application myapp {
           and output2 is_off
         # actions
         then {
+          output1 = true
+          output2 = true
         }
       }
     }

@@ -7,7 +7,7 @@ module Zonk # :nodoc:
     def check_override_value(val)
       return nil if val.nil?
       return val if value_range.include?(val)
-      out_of_range(val, value_range, name + ": override")
+      out_of_range(val, value_range, "#{name}: override")
     end
 
     def initialize_target

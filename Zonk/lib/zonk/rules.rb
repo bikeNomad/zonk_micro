@@ -12,14 +12,7 @@ module Zonk
     end
 
     def port(s)
-      case s
-      when TaskPort
-        s
-      when String
-        task.port_named(s)
-      else
-        raise "don't know how to make #{s} into a TaskPort"
-      end
+      (String === s) ? task.port_named(s) : s
     end
 
     # target must define
@@ -49,7 +42,8 @@ module Zonk
     attr_reader :pattern, :actions, :condition
     alias :table :owner
 
-    def add_action(*args)
+    # save my actions list
+    def add_actions(*args)
       @actions << args
     end
 
