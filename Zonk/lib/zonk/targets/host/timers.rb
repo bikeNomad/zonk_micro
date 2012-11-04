@@ -5,16 +5,13 @@ module Zonk
   # retriggerable one-shot Timer
   class Timer
     # optional _block is called upon a timeout
-    def initialize(_name, _period, &_block)
-      @name = _name
-      @period = _period
+    def initialize_target(&_block)
       @expires = nil
       @thread = nil
       @timed_out = false
       @block = _block
-      @repeats = false
     end
-    attr_reader :name, :period, :expires, :timed_out, :repeats
+    attr_reader :expires, :timed_out
 
     # start or restart my timing.
     # I will timeout in @period seconds.
@@ -44,8 +41,8 @@ module Zonk
     end
 
     def timeout_after(_period)
-      @expires = Time.now + _period
-      @period = _period
+      reset
+      set_period(_period)
       trigger
     end
 
@@ -59,11 +56,6 @@ module Zonk
 
   # Timer that repeats
   class Ticker < Timer
-    def initialize(_name, _period, &_block)
-      super
-      @repeats = true
-    end
-
     def start
       trigger
     end
@@ -71,6 +63,5 @@ module Zonk
     def stop
       reset
     end
-
   end
 end

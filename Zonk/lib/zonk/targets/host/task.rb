@@ -1,3 +1,6 @@
+require 'zonk'
+require 'thread'
+
 module Zonk # :nodoc:
   class Task < Base
     # :section: Runtime Support

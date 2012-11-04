@@ -12,16 +12,17 @@ end
 class TestTables < MiniTest::Unit::TestCase
 include Zonk
   def test_event_patterns
-    _t = self
-    Zonk::application('myapp') do
-      define_task('task1') do
-        table1 = define_table('table1') do
-          on_event(true, :yourself) { |evt| }
-          on_event(true, :yourself) { }
-        end
-        _t.assert_equal(1, table1.event_patterns.size, "must fold repeated event patterns")
-      end
-    end
+    myapp = Application.new
+      task1 = Task.new
+        table1 = Table.new
+          rule1 = Rule.new
+          rule1.set_event(true, :yourself)
+          table1.add_rule(rule1)
+          rule2 = Rule.new
+          rule2.set_event(true, :yourself)
+          table1.add_rule(rule2)
+        task1.add_table(table1)
+      myapp.add_task(task1)
+    assert_equal(1, table1.event_patterns.size, "must fold repeated event patterns")
   end
-
 end

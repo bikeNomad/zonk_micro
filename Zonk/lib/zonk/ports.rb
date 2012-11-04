@@ -3,7 +3,7 @@ module Zonk # :nodoc:
   # A TaskPort is a connection from a Task to a Target or other Task
   # instances. Each input TaskPort must be connected to something.
   # It is possible to have an output TaskPort that is not connected.
-  class TaskPort
+  class TaskPort < Base
     include Zonk
     protected
 
@@ -16,12 +16,10 @@ module Zonk # :nodoc:
       subclass_responsibility
     end
 
-    def initialize(_name = '')
-      @name = _name
-      initialize_target
+    def owner=(_owner)
+      super
+      _owner.add_port(self)
     end
-
-    attr_reader :name
 
   end
 

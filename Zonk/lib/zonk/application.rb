@@ -8,24 +8,21 @@ module Zonk
     # :section: Application Definition
     # These methods assist with the compile-time structure building
 
-    protected
-
     def add_target(_target)
       raise "target already defined" if @target
       @target = _target
-      theapp = self
-      _target.instance_eval { @owner = theapp }
+      _target.owner = self
       _target
     end
 
     def add_task(_task)
+      return _task if @tasks.include? _task
       @tasks << _task
-      theapp = self
-      _task.instance_eval { @owner = theapp }
+      _task.owner = self
       _task
     end
 
-    def initialize
+    def initialize(_name = nil, _owner = nil)
       super
       @tasks = []
       @target = nil
@@ -33,7 +30,10 @@ module Zonk
       @port_map = {}
     end
 
-    public
+    def owner=(_owner)
+      super
+      _owner.add_application(self)
+    end
 
     # _pinname is the name of a pin in my target
     # _port is 
@@ -45,20 +45,6 @@ module Zonk
     end
 
     attr_reader :tasks, :target
-
-    # returns a singleton instance of subclass of Task
-    def define_task(_name, base = Task, *extensions, &block)
-      newtask = make_singleton_of(_name, base, extensions, &block)
-      self.add_task(newtask)
-      newtask
-    end
-
-    # returns a singleton instance of subclass of Target
-    def define_target(_name, base = Target, *extensions, &block)
-      newtarget = make_singleton_of(_name, base, extensions, &block)
-      self.add_target(newtarget)
-      newtarget
-    end
 
   end
 end

@@ -5,99 +5,45 @@ class TestTasks < MiniTest::Unit::TestCase
   include Zonk
 
   def test_app_construction
-    _t = self   # must do this for access in instance_eval and class_eval blocks
-    Zonk::application('myapp') do
-      # self is application instance
-      _t.assert_kind_of(Zonk::Application, self, "self inside application block must be Application")
-      _t.refute_instance_of(Zonk::Application, self, "self inside application block must be subinstance of Application")
-      _t.assert_raises(TypeError, "app must be uncloneable") { self.clone }
-      _t.assert_includes(self.class.ancestors, Singleton, "self inside application block must be Singleton")
-      _t.assert_empty(self.tasks)
-      _t.assert_nil(self.target)
+    myapp = Application.new('myapp')
+    assert_empty(myapp.tasks)
 
-      task1 = define_task('task1') do
-        # self is task instance
-        _t.assert_kind_of(Zonk::Task, self, "self inside define_task block must be Task")
-        _t.refute_instance_of(Zonk::Task, self, "self inside define_task block must be subinstance of Task")
-        _t.assert_raises(TypeError, "task must be uncloneable") { self.clone }
-      end
+    task1 = Task.new('task1')
+    assert_nil(task1.owner)
+    myapp.add_task(task1)
+    assert_equal(myapp, task1.owner)
 
-      _t.refute_empty(self.tasks, "must have defined a task")
-      _t.assert_equal(1, self.tasks.size, "must have defined a task")
-      _t.assert_equal(self.tasks.first, task1, "first task must be task1")
-
-      target1 = define_target('testtarget') do
-        # self is target instance
-        _t.assert_kind_of(Zonk::Target, self, "self inside define_task block must be Target")
-        _t.refute_instance_of(Zonk::Target, self, "self inside define_task block must be subinstance of Target")
-        _t.refute_respond_to(self, :add_input_pin, "must not yet know add_input_pin")
-        target_instance = self
-
-        helpers do
-          # self is target class
-          _t.assert_kind_of(Class, self, "self inside define_target helpers block must be Class")
-          _t.refute_respond_to(self.instance, :add_input_pin, "must not yet know add_input_pin")
-          _t.assert_same(target_instance, self.instance, "helpers block must be class side of target")
-          pre_count = self.instance_methods.count
-
-          def add_input_pin(_name) add_pin(InputPin.new(_name, self)) end
-          def add_output_pin(_name) add_pin(OutputPin.new(_name, self)) end
-
-          post_count = self.instance_methods.count
-          _t.assert_equal(pre_count + 2, post_count, "must have just added two methods to class")
-        end
-
-        _t.assert_respond_to(self, :add_input_pin, "must now know add_input_pin")
-        _t.assert_empty(self.pins, "no pins yet")
-
-        pin1 = add_input_pin("pin1")
-        add_output_pin("pin2")
-
-        _t.assert_equal(2, self.pins.count, "must now have two pins")
-        _t.assert_includes(self.pin_names, "pin1", "must have pin1 by name")
-        _t.assert_includes(self.pins, pin1, "must have pin1 by value")
-        _t.assert_same(pin1, self.pin_named("pin1"), "must find pin1 by name")
-      end
-
-      _t.refute_nil(self.target)
-      _t.assert_equal(self.target, target1)
-      _t.assert_raises(RuntimeError, "app must accept only one target") { define_target('extratarget') { } }
-      _t.assert_same(self, target1.owner, "target must be owned by app")
-
-    end
+    refute_empty(myapp.tasks, "must have defined a task")
+    assert_equal(1, myapp.tasks.size, "must have defined a task")
+    assert_equal(myapp.tasks.first, task1, "first task must be task1")
   end
 
   def test_table_construction
-    _t = self
-    Zonk::application('myapp') do
-      define_task('task1') do
-        _t.assert_empty(tables, "must have no tables yet")
-
-        table1 = define_table('table1') do
-        end
-
-        _t.assert_equal(1, tables.size, "must have one table now")
-        _t.assert_same(self, table1.owner, "table must be owned by task")
-        # TODO
-        # _t.assert_same(current_table, table1, "table1 must be current table")
-      end
-    end
+    task1 = Task.new
+    assert_empty(task1.tables, "must have no tables yet")
+    table1 = Table.new('table1')
+    task1.add_table(table1)
+    assert_equal(task1, table1.owner)
+    assert_equal(1, task1.tables.size, "must have one table now")
+    assert_same(task1, table1.owner, "table must be owned by task")
   end
 
   def test_multiple_tasks
-    _t = self
-    Zonk::application('myapp') do
-      task1 = define_task('task1') { }
+    myapp = Application.new('myapp')
+    task1 = Task.new('task1')
 
-      _t.refute_empty(self.tasks, "must have defined a task")
-      _t.assert_equal(1, self.tasks.size, "must have defined a task")
-      _t.assert_equal(self.tasks.first, task1, "first task must be task1")
+    myapp.add_task(task1)
+    assert_equal(myapp, task1.owner)
 
-      task2 = define_task('task2') { }
+    assert_equal(1, myapp.tasks.size, "must have defined a task")
+    assert_equal(myapp.tasks.first, task1, "first task must be task1")
 
-      _t.assert_equal(2, self.tasks.size, "must have defined another task")
-      _t.assert_equal(self.tasks.last, task2, "second task must be task2")
-    end
+    task2 = Task.new('task2')
+    myapp.add_task(task2)
+
+    assert_equal(2, myapp.tasks.size, "must have defined another task")
+    assert_equal(myapp.tasks.first, task1, "first task must be task1")
+    assert_equal(myapp.tasks.last, task2, "last task must be task2")
   end
 end
 

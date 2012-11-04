@@ -1,5 +1,4 @@
 # :title: Zonk Infrastructure
-require 'singleton'
 require 'pp'
 
 module Zonk
@@ -39,115 +38,9 @@ module Zonk
     end
   end
 
-  # \Base class for customizable parts like Task, Target, and Table
   class Base
     include Zonk
-
-    class << self
-      protected
-
-      def direct_subclasses
-        @direct_subclasses ||= []
-      end
-
-      # Ensure that new subclasses are initialized correctly
-      def inherited(subclass)
-        super
-        subclass.reset!
-        direct_subclasses << subclass
-      end
-
-      # make this class a singleton
-      def reset!
-        include Singleton unless self.ancestors.include?(Singleton)
-      end
-
-      public
-
-      # Return direct and indirect subclasses
-      def subclasses
-        subs = []
-        direct_subclasses.each do |k|
-          subs << k
-          subs.concat(k.subclasses)
-        end
-        subs
-      end
-
-      def indirect_subclasses
-        subclasses - direct_subclasses
-      end
-
-      def subinstances
-        subclasses.map(&:instance)
-      end
-
-      def indirect_subinstances
-        indirect_subclasses.map(&:instance)
-      end
-  
-      # Return the single instance of a new subclass of class 'base'.
-      #
-      # The new subclass is extended by modules given in 'extensions' (if any),
-      # then it is made into a singleton instance.
-      #
-      # The singleton instance then is named as _name, and evaluates the optional block.
-      def make_singleton_of(_name, base, extensions, &block)
-        newklass = Class.new(base)
-        newklass.class_eval <<EOF
-          def self.to_s
-            "#<#{base.to_s}:<#{_name}>>"
-          end
-          def self.inspect
-            "#<#{base.to_s}:<#{_name}>>"
-          end
-EOF
-        newklass.class_eval do
-          def inspect
-            ary = []
-            for iv in instance_variables
-              iv = iv.to_s
-              ary.push format("%s=%s", iv, eval(iv).to_s)
-            end
-            format("#<%s: %s>", self.class, ary.join(", "))
-          end
-          include(Zonk)
-          include(*extensions) if extensions.any?
-        end
-        newklass.instance.instance_eval do
-          @name = _name
-        end
-        newklass.instance.instance_eval(&block) if block_given?
-        newklass.instance
-      end
-
-      # Makes the methods defined in the block and in the Modules given
-      # in 'extensions' available in this class
-      def helpers(*extensions, &block)
-        class_eval(&block)   if block_given?
-        include(*extensions) if extensions.any?
-      end
-
-      def application(_name, base=Application, &block)
-        make_singleton_of(_name, base, [], &block)
-      end
-
-    end # Zonk::Base class
-
     protected
-
-    def make_singleton_of(_name, base, extensions, &block)
-      self.class.make_singleton_of(_name, base, extensions, &block)
-    end
-
-    # self.reset!
-
-    def initialize  # :notnew: :nodoc:
-      @name = nil
-      @owner = nil
-
-      initialize_target
-    end
 
     # defined in subclasses by target modules
     def initialize_target
@@ -155,7 +48,31 @@ EOF
 
     public
 
-    attr_reader :name, :owner
+    def owner=(_owner)
+      return if @owner == _owner
+      raise "already owned by #{@owner.inspect}" unless @owner.nil?
+      @owner = _owner
+    end
+
+    def initialize(_name = nil, _owner = nil)
+      @name = _name
+      if _owner
+        self.owner= _owner
+      else
+        @owner = nil
+      end
+      initialize_target
+    end
+
+    attr_accessor :name
+    attr_reader :owner
+
+    # Makes the methods defined in the block and in the Modules given
+    # in 'extensions' available in this class
+    def self.helpers(*extensions, &block)
+      class_eval(&block)   if block_given?
+      include(*extensions) if extensions.any?
+    end
 
     # Makes the methods defined in the block and in the Modules given
     # in 'extensions' available in this class
@@ -164,12 +81,5 @@ EOF
     end
 
   end # Zonk::Base
-
-  # Create a new Zonk application.
-  # The optional block is evaluated in the new app's class scope.
-  # Returns the sole instance of the new singleton class.
-  def self.application(_name, base=Application, &block)
-    Base::application(_name, base=Application, &block)
-  end
 
 end # module Zonk

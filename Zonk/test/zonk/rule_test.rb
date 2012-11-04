@@ -15,13 +15,16 @@ class TestRules < MiniTest::Unit::TestCase
   end
 
   def test_rule_without_conditions
-    rule = Rule.new(@p1, :on?, [])
+    rule = Rule.new
+    rule.set_event(@p1, :on?)
     assert(rule.match_event(Event.new(@p1, :on?)))
     refute(rule.match_event(Event.new(@p1, :off?)))
   end
 
   def test_rule_with_conditions
-    rule = Rule.new(@p1, :on?, [ @p2, :off? ])
+    rule = Rule.new
+    rule.set_event(@p1, :on?)
+    rule.set_conditions(@p2, :off?)
     assert(rule.match_event(Event.new(@p1, :on?)))
     refute(rule.match_event(Event.new(@p1, :off?)))
     @p2.override(true)
