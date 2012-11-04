@@ -4,6 +4,32 @@ require 'treetop'
 # included by 
 # Zonk::Grammar::GrammarParser (see lib/grammar.tt)
 
+class Treetop::Runtime::SyntaxNode
+  def is_comment
+    false
+  end
+
+  def with_all_subelements
+    retval = [self]
+    elements.each { |e| retval << e.with_all_subelements } if elements
+    retval.flatten
+  end
+
+  def all_comment_nodes
+    return parent.all_comment_nodes unless parent.nil?
+    self.with_all_subelements.select { |e| e.is_comment }
+  end
+
+  def keyword_element
+    parent.keyword_element
+  end
+
+  def leading_comment_nodes
+    parent.leading_comment_nodes
+  end
+
+end
+
 module Zonk
 module Grammar
 
@@ -29,6 +55,20 @@ class ZonkGrammarNode < Treetop::Runtime::SyntaxNode
     def port_type(pn)
       ports[pn]
     end
+    def printed_comments
+      @printed_comments ||= []
+    end
+  end
+
+  def keyword_element
+    return nil if elements.nil? || elements.size < 2
+    elements[1]
+  end
+
+  def leading_comment_nodes
+    ke = keyword_element
+    return [] if ke.nil?
+    all_comment_nodes.select { |e| e.interval.first < ke.interval.first }
   end
 
   def reserved_word?(w)
@@ -41,15 +81,26 @@ class ZonkGrammarNode < Treetop::Runtime::SyntaxNode
   
   def remember_port(pn,pk)
     self.class.ports[pn] = pk
-    puts("remember #{pn} #{pk}")
+    # $stderr.puts("remember #{pn} #{pk}")
   end
 
   def printf(*args)
     ZonkGrammarNode.output_stream.printf(*args)
   end
 
-  def instantiate(owner=nil)
+  def puts(*args)
+    ZonkGrammarNode.output_stream.puts(*args)
+  end
+
+  def print_leading_comments
+    c = leading_comment_nodes - ZonkGrammarNode.printed_comments
+    puts c.map(&:text_value) unless c.empty?
+    ZonkGrammarNode.printed_comments.concat(c)
+  end
+
+  def generate_ruby(owner=nil)
     owner_str = owner ? ", #{owner.name.text_value}" : ''
+    print_leading_comments
     printf("%s = %s.new('%s'%s)\n", name.text_value, model_class.name, name.text_value, owner_str)
   end
 end
@@ -59,10 +110,12 @@ class ApplicationNode < ZonkGrammarNode
     Application
   end
 
-  def instantiate(owner=nil)
+  def generate_ruby(owner=nil)
+    puts("require 'zonk'")
     super
-    tasks.elements.each { |task| task.instantiate(self) }
+    tasks.elements.each { |task| task.generate_ruby(self) }
   end
+
 end
 
 class TaskNode < ZonkGrammarNode
@@ -70,10 +123,10 @@ class TaskNode < ZonkGrammarNode
     Task
   end
 
-  def instantiate(owner=nil)
+  def generate_ruby(owner=nil)
     super
-    ports.elements.each { |port| port.instantiate(self) }
-    tables.elements.each { |table| table.instantiate(self) }
+    ports.elements.each { |port| port.generate_ruby(self) }
+    tables.elements.each { |table| table.generate_ruby(self) }
   end
 end
 
@@ -108,9 +161,9 @@ class TableNode < ZonkGrammarNode
     Table
   end
 
-  def instantiate(owner=nil)
+  def generate_ruby(owner=nil)
     super
-    rules.elements.each { |rule| rule.instantiate(self) }
+    rules.elements.each { |rule| rule.generate_ruby(self) }
   end
 end
 
@@ -119,7 +172,7 @@ class RuleNode < ZonkGrammarNode
     Rule
   end
 
-  def instantiate(owner=nil)
+  def generate_ruby(owner=nil)
     super
     printf("%s.set_event(%s)\n", name.text_value, event.as_args.join(', '))
     printf("%s.set_conditions(%s)\n", name.text_value, condition.as_args.join(", "))
@@ -139,6 +192,12 @@ class WordNode < ZonkGrammarNode
 end
 
 class NameNode < WordNode
+end
+
+class CommentNode < ZonkGrammarNode
+  def is_comment
+    true
+  end
 end
 
 # rule boolean_literal

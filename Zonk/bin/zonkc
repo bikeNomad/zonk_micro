@@ -1,13 +1,19 @@
 #!/usr/bin/env ruby
 
+$: << 'lib'
+
 # .zonk => .rb compiler
 require 'zonk'
 require 'zonk/grammar'
 
+$outputfile = nil
+
 if ARGV[0] == '-o'
-  (flag, outname) = ARGV.shift(2)
-  $stdout = File.open(outname, 'w')
+  (flag, $outputfile) = ARGV.shift(2)
+  $stdout = File.open($outputfile, 'w')
 end
+
+failed = nil
 
 ARGV.each do |infilename|
   input_data = File.read(infilename)
@@ -17,8 +23,19 @@ ARGV.each do |infilename|
   parser.consume_all_input = true
   result = parser.parse(input_data)
   if result.nil?
-    $stderr.puts parser.failure_reason
+    failed = parser.failure_reason
+    break
   else
-    result.instantiate
+    result.generate_ruby
   end
+end
+
+if failed
+    $stderr.puts failed
+    if $outputfile
+      $stdout.close
+      $stderr.puts("Deleting #{$outputfile}")
+      File.delete($outputfile)
+    end
+    exit 1
 end

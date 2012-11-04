@@ -5,147 +5,159 @@ require "zonk/grammar_nodes"
 # and class Zonk::Grammar::GrammarParser 
 
 module Zonk
-  grammar Grammar
+    grammar Grammar
 
-    rule application
-      os 'application' rs name block_beg tasks:task* block_end <ApplicationNode>
-    end
-
-    rule task
-      'task' rs name block_beg ports:port* tables:table* block_end  <TaskNode>
-    end
-
-    rule table
-      'table' rs name block_beg rules:rule_def* block_end  <TableNode>
-    end
-
-    rule rule_def
-      'rule' rs name block_beg event rs condition:condition? 'then' block_beg actions:action* block_end block_end <RuleNode>
-    end
-
-    rule event
-      'when' rs port_op {
-        def as_args
-          port_op.as_args
+        rule application
+            os 'application' rs name block_beg tasks:task* block_end <ApplicationNode>
         end
-      }
-    end
 
-    rule port_op
-      # TODO make port_name work here
-      name rs word '' {
-        def as_args
-          ["port_named(#{elements[0].text_value})", ":#{word.text_value}"]
+        rule task
+            os 'task' rs name block_beg ports:port* tables:table* block_end    <TaskNode>
         end
-      }
-    end
 
-    rule condition
-      'if' rs primitive_condition acs:additional_condition* rs {
-        def as_args
-          retval = [primitive_condition.as_args]
-          acs.elements.each { |e| retval << e.as_args }
-          retval.flatten
+        rule table
+            os 'table' rs name block_beg rules:rule_def* block_end  <TableNode>
         end
-      }
-    end
 
-    rule primitive_condition
-      !'and' port_op {
-        def as_args
-          port_op.as_args
+        rule rule_def
+            os 'rule' rs name block_beg 
+                event rs
+                condition:condition?
+                'then' block_beg
+                    actions:action*
+                block_end
+            block_end <RuleNode>
         end
-      }
-    end
 
-    rule additional_condition
-      rs 'and' rs primitive_condition {
-        def as_args
-          primitive_condition.as_args
+        rule event
+            os 'when' rs port_op
+            {
+                def as_args
+                    port_op.as_args
+                end
+            }
         end
-      }
-    end
 
-    rule action
-      name os '=' os rstate {
-        def as_args
-          ["port_named(#{name.text_value})", ":#{rstate.text_value}"]
+        rule port_op
+            # TODO make port_name work here
+            name rs word ''
+            {
+                def as_args
+                    ["'#{elements[0].text_value}'", ":#{word.text_value}"]
+                end
+            }
         end
-      }
-    end
 
-    # new state for action recipient
-    rule rstate
-      word
-    end
+        rule condition
+            os 'if' rs primitive_condition acs:additional_condition* rs
+            {
+                def as_args
+                    retval = [primitive_condition.as_args]
+                    acs.elements.each { |e| retval << e.as_args }
+                    retval.flatten
+                end
+            }
+        end
 
-    rule word
-      [a-zA-Z] [a-zA-Z0-9_-]*  <WordNode>
-    end
+        rule primitive_condition
+            !'and' port_op
+            {
+                def as_args
+                    port_op.as_args
+                end
+            }
+        end
 
-    # a word, but ensure that it isn't a reserved word.
-    rule name
-      word !{|s| s[0].is_reserved } <NameNode>
-    end
+        rule additional_condition
+            rs 'and' rs primitive_condition
+            {
+                def as_args
+                    primitive_condition.as_args
+                end
+            }
+        end
 
-    # a name, but look it up first.
-    rule port_name
-      name !{|s| s[0].port_type.nil? }
-    end
+        rule action
+            name os '=' os rstate
+            {
+                def as_args
+                    ["port_named(#{name.text_value})", ":#{rstate.text_value}"]
+                end
+            }
+        end
 
-    # a name, but look it up first to ensure that it isn't
-    # already used for something else
-    rule new_port_name
-      word &{|s| s[0].port_type.nil? }
-    end
+        # new state for action recipient
+        rule rstate
+            word
+        end
 
-    rule comment
-      '#' [^\n]* "\n"
-    end
+        rule word
+            [a-zA-Z] [a-zA-Z0-9_-]*  <WordNode>
+        end
 
-    # required space
-    rule rs
-      ([ \t\n] / comment)+
-    end
+        # a word, but ensure that it isn't a reserved word.
+        rule name
+            word !{|s| s[0].is_reserved } <NameNode>
+        end
 
-    # optional space
-    rule os
-      ([ \t\n] / comment)*
-    end
+        # a name, but look it up first.
+        rule port_name
+            name !{|s| s[0].port_type.nil? }
+        end
 
-    rule block_beg
-      os '{' os
-    end
+        # a name, but look it up first to ensure that it isn't
+        # already used for something else
+        rule new_port_name
+            word &{|s| s[0].port_type.nil? }
+        end
 
-    rule block_end
-      os '}' os
-    end
+        rule comment
+            '#' [^\n]* "\n" <CommentNode>
+        end
 
-    rule digital_port
-      ('digital_input' / 'digital_output') rs name:new_port_name rs <PortNode>
-    end
+        # required space
+        rule rs
+            ([ \t\n] / comment)+
+        end
 
-    rule analog_port
-      ('analog_input' / 'analog_output') rs name:new_port_name rs <PortNode>
-    end
+        # optional space
+        rule os
+            ([ \t\n] / comment)*
+        end
 
-    rule timer_port
-      'timer' rs name:new_port_name rs <PortNode>
-    end
+        rule block_beg
+            os '{' os
+        end
 
-    rule ticker_port
-      'ticker' rs name:new_port_name rs <PortNode>
-    end
+        rule block_end
+            os '}' os
+        end
 
-    rule port
-      (digital_port / analog_port / timer_port / ticker_port)
-    end
+        rule digital_port
+            ('digital_input' / 'digital_output') rs name:new_port_name rs <PortNode>
+        end
 
-    rule boolean_literal
-      ('true' / 'false' / '1' / '0' / [Oo] [Nn] / [Oo] [Ff] [Ff]) <BooleanLiteralNode>
-    end
+        rule analog_port
+            ('analog_input' / 'analog_output') rs name:new_port_name rs <PortNode>
+        end
 
-  end
+        rule timer_port
+            'timer' rs name:new_port_name rs <PortNode>
+        end
+
+        rule ticker_port
+            'ticker' rs name:new_port_name rs <PortNode>
+        end
+
+        rule port
+            (digital_port / analog_port / timer_port / ticker_port)
+        end
+
+        rule boolean_literal
+            ('true' / 'false' / '1' / '0' / [Oo] [Nn] / [Oo] [Ff] [Ff]) <BooleanLiteralNode>
+        end
+
+    end
 end
 
-# vim: ft=treetop ts=2 sw=2 et
+# vim: ft=treetop ts=4 sw=4 et

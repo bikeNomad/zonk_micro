@@ -20,7 +20,9 @@ Hoe.spec 'Zonk' do |p|
 end
 
 desc 'test zonk compiler'
-task :compiler_test => [ 'lib/zonk/grammar.rb', 'examples/simple_task.rb' ]
+task :compiler_test => [ 'lib/zonk/grammar.rb', 'examples/simple_task.rb' ] do
+  ruby('-Ilib', 'examples/simple_task.rb')
+end
 
 # Compile a Treetop .tt file into a Ruby file
 rule '.rb' => [ '.tt' ] do |t|
@@ -29,7 +31,8 @@ end
 
 # Compile a Zonk .zonk file into a Ruby file
 rule '.rb' => [ '.zonk' ] do |t|
-  sh "bin/zonkc -o #{t.name} #{t.source}"
+  args = %w(-Ilib bin/zonkc -o) << t.name << t.source
+  ruby(*args)
 end
 
 desc 'make tags for vim'
