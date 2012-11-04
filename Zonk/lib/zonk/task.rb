@@ -1,8 +1,7 @@
 module Zonk # :nodoc:
 
   # Each Zonk Application has at least one Task.
-  # A Task is a Singleton class/instance that owns TaskPorts and at
-  # least one Table.
+  # A Task owns TaskPorts and at least one Table.
   class Task < Base
     include Zonk
     # :section: Compilation and Introspection
@@ -13,7 +12,7 @@ module Zonk # :nodoc:
       @ports.values.select { |port| (port.capabilities & capabilities).size == ncapabilities }
     end
 
-    def initialize
+    def initialize(_name = nil, _owner = nil)
       super
       # Hash of ports
       # portname => TaskPort
@@ -23,6 +22,11 @@ module Zonk # :nodoc:
       # My timer definitions
       # name => Timer/Ticker
       @timers = {}
+    end
+
+    def owner=(_owner)
+      super
+      _owner.add_task(self)
     end
 
     # :section: Structure Queries
@@ -91,52 +95,26 @@ module Zonk # :nodoc:
 
     # Add the given port
     def add_port(port)
+      return port if @ports.has_value? port
       @ports[port.name.to_s] = port
+      port.owner= self
       port
     end
 
     # Add the given table
     def add_table(table)
+      return table if @tables.has_value? table
       @tables[table.name.to_s] = table
+      table.owner= self
       table
     end
 
-    # Returns a singleton instance of subclass of Table
-    def define_table(_name, base = Table, *extensions, &block)
-      new_table = make_singleton_of(_name, base, extensions)
-      add_table(new_table)
-      the_task = self
-      new_table.instance_eval { @owner = the_task }
-      new_table.instance_eval(&block)
-      new_table
-    end
-
-    # Add a DigitalInputPort with the given _name
-    def add_digital_input_port(_name)
-      add_port(DigitalInputPort.new(_name))
-    end
-
-    # Add a DigitalOutputPort with the given _name
-    def add_digital_output_port(_name)
-      add_port(DigitalOutputPort.new(_name))
-    end
-
-    # Add a Ticker
-    def add_ticker(_name, _period)
-      _name = _name.to_s
-      t = Ticker.new(_name, _period)
-      @timers[_name] = t
-      t
-    end
-
-    # Add a Timer
-    def add_timer(_name, _period)
-      _name = _name.to_s
-      t = Timer.new(_name, _period)
-      @timers[_name] = t
-      t
+    def add_timer(timer_or_ticker)
+      return timer_or_ticker if @timers.has_value? timer_or_ticker
+      @timers[timer_or_ticker.name.to_s] = timer_or_ticker
+      timer_or_ticker.owner= self
+      timer_or_ticker
     end
 
   end
-
 end

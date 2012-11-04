@@ -1,54 +1,31 @@
 require 'pp'
 require "zonk"
 require "zonk/targets/host_simulation"
+include Zonk
 
-$app=
-Zonk::application('myapp') do # self is the Application
+$app = Application.new('myapp')
+$task = Task.new('task1', $app)
+in1 = $task.add_port(DigitalInputPort.new('input1'))
+out1 = $task.add_port(DigitalOutputPort.new('output1'))
+out2 = $task.add_port(DigitalOutputPort.new('output2'))
 
-  define_task('task1') do # self is the Task
-    add_digital_input_port('input1')
-    add_digital_output_port('output1')
-    add_digital_output_port('output2')
+$table = Table.new('table1', $task)
 
-    define_table('table1') do # self is the Table
-      # Rule 1
-      on_event(port('input1'), :went_high,
-               port('output1'), :off?,
-               port('output2'), :off?) do
-        message("in first rule")
-        set_port_value(port('output2'), true)
-      end
+rule1 = Rule.new('rule1', $table)
+rule1.set_event(in1, :went_high)
+rule1.set_conditions(out1, :off?, out2, :off?)
 
-      # Rule 2
-      on_event(port('input1'), :went_high,
-               port('output2'), :on?) do
-        message("in second rule")
-        set_port_value(port('output2'), false)
-      end
+rule1.add_action(:message, 'in first rule')
+rule1.add_action(:port, 'output2', :set_port_value, true)
 
-    end
-  end
+rule2 = Rule.new('rule2', $table)
+rule2.set_event(in1, :went_high)
+rule2.set_conditions(out2, :on?)
+rule2.add_action(:message, 'in second rule')
+rule2.add_action(:port, 'output2', :set_port_value, true)
 
-  define_target('testtarget') do  # self is the Target
-    helpers do
-      def add_input_pin(_name) add_pin(InputPin.new(_name, self)) end
-      def add_output_pin(_name) add_pin(OutputPin.new(_name, self)) end
-    end
-
-    add_input_pin("pin1")
-    add_output_pin("pin2")
-  end
-
-  # TODO connect pins to ports
-
-end
-
-$task = $app.tasks.first
-$table = $task.tables.first
-$input1 = $task.port('input1')
-$output1 = $task.port('output1')
 $thread1 = $task.run!
-$task.add_event(Event.new($input1, :went_high))
+$task.add_event(Event.new(in1, :went_high))
 sleep(3)
 $task.terminate!
 
