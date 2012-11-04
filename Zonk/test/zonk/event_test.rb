@@ -13,12 +13,6 @@ class TestEvents < MiniTest::Unit::TestCase
     e = Event.new(1, 2)
     refute_operator(p, :match_event, e, "simple mismatch must fail")
 
-    p = EventPattern.new(1, [1, 2])
-    e = Event.new(1, 1)
-    assert_operator(p, :match_event, e, "includes? match must succeed")
-    e = Event.new(1, 2)
-    assert_operator(p, :match_event, e, "includes? match must succeed")
-
     p = EventPattern.new(Fixnum, 2)
     e = Event.new(1234, 2)
     assert_operator(p, :match_event, e, "class/object match must succeed")

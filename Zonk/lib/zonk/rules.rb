@@ -32,7 +32,7 @@ module Zonk
     end
 
     def set_event(_src, _kind)
-      @pattern = EventPattern.new(port(_src), _kind)
+      @pattern = EventPattern.new(port(_src), _kind.to_sym)
     end
 
     def set_conditions(*_conds)
@@ -44,7 +44,7 @@ module Zonk
 
     # save my actions list
     def add_actions(*args)
-      @actions << args
+      @actions.concat(args)
     end
 
     def task

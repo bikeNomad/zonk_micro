@@ -3,12 +3,7 @@ module Zonk
     # Returns true if both the source and kind of evt
     # match my source and kinds patterns.
     def match_event(evt)
-      return false unless @source === evt.source
-      if @kinds.respond_to?(:include?)
-        @kinds.include?(evt.kind)
-      else
-        @kinds === evt.kind
-      end
+      @source === evt.source && @kinds === evt.kind
     end
   end
 
@@ -23,7 +18,7 @@ module Zonk
     # _data:: optional data attached to the Event
     def initialize(_source, _kind, _detected=Time.now, _data=nil)
       @source = _source
-      @kind = _kind
+      @kind = (String === _kind) ? _kind.to_sym : _kind
       @timestamp = _detected
       @data = _data
     end

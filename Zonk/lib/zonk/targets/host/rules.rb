@@ -17,9 +17,13 @@ module Zonk
       @pattern.match_event(evt) && @condition.value
     end
 
+    # TODO
     def do_actions_for(evt)
-      # TODO
-      $stderr.puts("doing #{@actions.inspect}")
+      return unless match_event(evt)
+      # $stderr.puts("doing #{@actions.inspect}")
+      @actions.each do |act|
+        self.port(act[0]).value= eval(act[1])
+      end
     end
   end
 
