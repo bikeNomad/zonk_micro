@@ -7,6 +7,7 @@ Hoe.add_include_dirs('server')
 Hoe.spec 'Zonk' do |p|
   p.developer('Ned Konz', 'ned-ruby@bike-nomad.com')
   p.dependency('sinatra', '~>1.3')
+  p.dependency('simplecov', '~>0.7', :dev)
   p.license('MIT')
   p.rubyforge_name='bikeNomad'
   p.spec_extras = {
