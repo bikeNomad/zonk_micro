@@ -6,8 +6,7 @@ module Zonk # :nodoc:
 
     def check_override_value(val)
       return nil if val.nil?
-      return val if value_range.include?(val)
-      out_of_range(val, value_range, "#{name}: override")
+      check_range(val, value_range, "#{name}: override")
     end
 
     def initialize_target
@@ -19,11 +18,7 @@ module Zonk # :nodoc:
     attr_reader :last_value
 
     def check_value(val)
-      if value_range.include?(val)
-        val
-      else
-        out_of_range(val, value_range, name)
-      end
+      check_range(val, value_range, name)
     end
 
     public
