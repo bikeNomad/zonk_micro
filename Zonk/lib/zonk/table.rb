@@ -35,16 +35,6 @@ module Zonk
       h.values
     end
 
-    # Return my task's port with the given _name
-    def port(_name)
-      task.port(_name)
-    end
-
-    # enqueue a message onto my task's message queue
-    def message(*args)
-      task.message("#{name}: " + sprintf(*args))
-    end
-
     def add_rule(rule)
       return if @rules.include? rule
       @rules << rule

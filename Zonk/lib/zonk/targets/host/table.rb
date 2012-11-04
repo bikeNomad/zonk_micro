@@ -15,6 +15,11 @@ module Zonk
       matched.do_actions_for(evt)
     end
 
+    # enqueue a message onto my task's message queue
+    def message(*args)
+      task.message("#{name}: " + sprintf(*args))
+    end
+
     # called upon entry to the table
     def enter_table
       # TODO enqueue table entry event
