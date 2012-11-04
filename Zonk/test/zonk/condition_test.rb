@@ -53,6 +53,36 @@ class TestZonkConditions < MiniTest::Unit::TestCase
     cc = c1.and c2
     assert_instance_of(CompositeCondition, cc, "'.and' must make a CompositeCondition out of two Conditions")
     assert_equal(2, cc.conditions.count)
+
+    c3 = Condition.new(true, :yourself)
+    c4 = Condition.new(true, :yourself)
+    cc2 = cc & (c3 & c4)
+    assert_instance_of(CompositeCondition, cc2, "combining two CompositeConditions should merge conditions")
+    assert_equal(4, cc2.conditions.count, "combining two CompositeConditions should merge conditions")
+    
+  end
+
+  def test_compare
+    c1 = Condition.new(true, :yourself)
+    c2 = Condition.new(true, :yourself)
+    cc = c1 & c2
+
+    assert_same(true === cc, true == cc)
+    assert_same(false === cc, false == cc)
+    assert_same(cc === true, cc.value == true)
+  end
+
+  def test_exceptions
+    e1 = RuntimeError.new
+    c2 = Condition.new(e1, :raise)
+    assert_same(false, c2.value)
+
+    c1 = Condition.new(true, :yourself)
+    assert_raises(RuntimeError, "combining with non-bool should raise exception") { c1 & 3 }
+
+    c2 = Condition.new(true, :yourself)
+    cc = c1 & c2
+    assert_raises(RuntimeError, "combining with non-bool should raise exception") { cc & 3 }
   end
 end
 

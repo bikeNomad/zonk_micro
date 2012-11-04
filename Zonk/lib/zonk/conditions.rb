@@ -31,7 +31,13 @@ module Zonk
 
     # convert to bool
     def value
-      @conditions.all? { |cond| cond.value }
+      @conditions.all? do |cond|
+        begin
+          cond.value
+        rescue
+          false
+        end
+      end
     end
 
     # compare with bool
@@ -61,7 +67,7 @@ module Zonk
     end
 
     def &(other)
-      return CompositeCondition.new(self, other)
+      return CompositeCondition.new(self) & other
     end
 
     # NOTE that you can't just go
