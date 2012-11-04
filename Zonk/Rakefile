@@ -17,6 +17,19 @@ Hoe.spec 'Zonk' do |p|
   # pp p.spec unless p.spec.nil?
 end
 
+desc 'test zonk compiler'
+task :compiler_test => [ 'examples/zonk_compiled.rb' ] do
+  ruby('examples/zonk_compiled.rb')
+end
+
+file 'examples/zonk_compiled.rb' => [ 'lib/zonk/grammar.rb', 'examples/simple_task.zonk' ] do
+  ruby('-Ilib:test', 'lib/zonk/grammar.rb', 'examples/simple_task.zonk')
+end
+
+file 'lib/zonk/grammar.rb' => [ 'lib/zonk/grammar.tt' ] do
+  sh('tt -o lib/zonk/grammar.rb lib/zonk/grammar.tt')
+end
+
 desc 'make tags for vim'
 task :tags do
   sh('ctags -R lib test')

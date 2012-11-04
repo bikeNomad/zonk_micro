@@ -1,0 +1,34 @@
+application myapp {
+  # application's tasks
+  task task1 {
+    # port definitions
+    digital_input   input1
+    digital_output  output1
+    digital_output  output2
+
+    # task's tables
+    table table1 {
+      # First rule
+      rule rule1 {
+        # rule's event
+        when input1 goes ON
+        # rule's condition (optional)
+        if output1 is OFF
+          and output2 is OFF
+        then {
+          # rule's actions
+        }
+      }
+    }
+  }
+}
+
+target mytarget {
+  type arduino_mega
+}
+
+connect myapp to mytarget {
+  myapp.input1 = mytarget.pin1
+  myapp.output1 = mytarget.pin2
+  myapp.output1 = mytarget.pin3
+}
