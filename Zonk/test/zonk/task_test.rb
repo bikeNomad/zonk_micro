@@ -18,6 +18,15 @@ class TestTasks < MiniTest::Unit::TestCase
     assert_equal(myapp.tasks.first, task1, "first task must be task1")
   end
 
+  def test_app_construction_2
+    myapp = Application.new('myapp')
+    assert_empty(myapp.tasks)
+
+    task1 = Task.new('task1', myapp)
+    assert_equal(myapp, task1.owner)
+    refute_empty(myapp.tasks, "must have defined a task")
+  end
+
   def test_table_construction
     task1 = Task.new
     assert_empty(task1.tables, "must have no tables yet")
@@ -30,17 +39,12 @@ class TestTasks < MiniTest::Unit::TestCase
 
   def test_multiple_tasks
     myapp = Application.new('myapp')
-    task1 = Task.new('task1')
-
-    myapp.add_task(task1)
+    task1 = Task.new('task1', myapp)
     assert_equal(myapp, task1.owner)
-
     assert_equal(1, myapp.tasks.size, "must have defined a task")
     assert_equal(myapp.tasks.first, task1, "first task must be task1")
 
-    task2 = Task.new('task2')
-    myapp.add_task(task2)
-
+    task2 = Task.new('task2', myapp)
     assert_equal(2, myapp.tasks.size, "must have defined another task")
     assert_equal(myapp.tasks.first, task1, "first task must be task1")
     assert_equal(myapp.tasks.last, task2, "last task must be task2")

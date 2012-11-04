@@ -56,11 +56,8 @@ module Zonk
 
     def initialize(_name = nil, _owner = nil)
       @name = _name
-      if _owner
-        self.owner= _owner
-      else
-        @owner = nil
-      end
+      @owner = nil
+      self.owner= _owner if _owner
       initialize_target
     end
 
