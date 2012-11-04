@@ -16,29 +16,30 @@ Hoe.spec 'Zonk' do |p|
   }
   p.testlib = :minitest
   # pp p.spec unless p.spec.nil?
+  p.clean_globs = %w(lib/zonk/grammar.rb examples/simple_task.rb)
 end
 
 desc 'test zonk compiler'
-task :compiler_test => [ 'examples/zonk_compiled.rb' ] do
-  ruby('examples/zonk_compiled.rb')
+task :compiler_test => [ 'lib/zonk/grammar.rb', 'examples/simple_task.rb' ]
+
+# Compile a Treetop .tt file into a Ruby file
+rule '.rb' => [ '.tt' ] do |t|
+  sh "tt -o #{t.name} #{t.source}"
 end
 
-file 'examples/zonk_compiled.rb' => [ 'lib/zonk/grammar.rb', 'examples/simple_task.zonk' ] do
-  ruby('-Ilib:test', 'lib/zonk/grammar.rb', 'examples/simple_task.zonk')
-end
-
-file 'lib/zonk/grammar.rb' => [ 'lib/zonk/grammar.tt' ] do
-  sh('tt -o lib/zonk/grammar.rb lib/zonk/grammar.tt')
+# Compile a Zonk .zonk file into a Ruby file
+rule '.rb' => [ '.zonk' ] do |t|
+  sh "bin/zonkc -o #{t.name} #{t.source}"
 end
 
 desc 'make tags for vim'
 task :tags do
-  sh('ctags -R lib test')
+  sh 'ctags -R lib test'
 end
 
 desc 'run a simple task'
 task :simple do
-  ruby('-Ilib:test', 'examples/simple_task.rb')
+  ruby('-Ilib:test', 'examples/simple_task_ruby.rb')
 end
 
 desc 'make coverage report'
@@ -50,7 +51,6 @@ task :simplecov do
     " -e 'SimpleCov.command_name \"test:lib\"; SimpleCov.add_filter \"/test/\"; SimpleCov.start'" +
     " -e 'require \"minitest/autorun\"'" +
     " -e '#{tests.join("; ")}'"
-
 end
 
 # vim: syntax=ruby

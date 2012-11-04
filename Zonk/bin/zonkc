@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+# .zonk => .rb compiler
+require 'zonk'
+require 'zonk/grammar'
+
+if ARGV[0] == '-o'
+  (flag, outname) = ARGV.shift(2)
+  $stdout = File.open(outname, 'w')
+end
+
+ARGV.each do |infilename|
+  input_data = File.read(infilename)
+  Zonk::Grammar::ZonkGrammarNode.output_stream= $stdout
+  parser = Zonk::GrammarParser.new
+  parser.root = :application
+  parser.consume_all_input = true
+  result = parser.parse(input_data)
+  if result.nil?
+    $stderr.puts parser.failure_reason
+  else
+    result.instantiate
+  end
+end

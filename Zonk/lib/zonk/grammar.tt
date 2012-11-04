@@ -7,34 +7,110 @@ require "zonk/grammar_nodes"
 module Zonk
   grammar Grammar
 
+    rule application
+      os 'application' rs name block_beg tasks:task* block_end <ApplicationNode>
+    end
+
+    rule task
+      'task' rs name block_beg ports:port* tables:table* block_end  <TaskNode>
+    end
+
+    rule table
+      'table' rs name block_beg rules:rule_def* block_end  <TableNode>
+    end
+
+    rule rule_def
+      'rule' rs name block_beg event rs condition:condition? 'then' block_beg actions:action* block_end block_end <RuleNode>
+    end
+
+    rule event
+      'when' rs port_op {
+        def as_args
+          port_op.as_args
+        end
+      }
+    end
+
+    rule port_op
+      # TODO make port_name work here
+      name rs word '' {
+        def as_args
+          ["port_named(#{elements[0].text_value})", ":#{word.text_value}"]
+        end
+      }
+    end
+
+    rule condition
+      'if' rs primitive_condition acs:additional_condition* rs {
+        def as_args
+          retval = [primitive_condition.as_args]
+          acs.elements.each { |e| retval << e.as_args }
+          retval.flatten
+        end
+      }
+    end
+
+    rule primitive_condition
+      !'and' port_op {
+        def as_args
+          port_op.as_args
+        end
+      }
+    end
+
+    rule additional_condition
+      rs 'and' rs primitive_condition {
+        def as_args
+          primitive_condition.as_args
+        end
+      }
+    end
+
+    rule action
+      name os '=' os rstate {
+        def as_args
+          ["port_named(#{name.text_value})", ":#{rstate.text_value}"]
+        end
+      }
+    end
+
+    # new state for action recipient
+    rule rstate
+      word
+    end
+
     rule word
-      [a-zA-Z] [a-zA-Z0-9_-]*
+      [a-zA-Z] [a-zA-Z0-9_-]*  <WordNode>
     end
 
     # a word, but ensure that it isn't a reserved word.
     rule name
-      word !{|s| reserved_word?(s[0].text_value) } <NameNode>
+      word !{|s| s[0].is_reserved } <NameNode>
     end
 
     # a name, but look it up first.
     rule port_name
-      name !{|s| port_type(s[0].text_value).nil? }
+      name !{|s| s[0].port_type.nil? }
     end
 
     # a name, but look it up first to ensure that it isn't
     # already used for something else
     rule new_port_name
-      name &{|s| port_type(s[0].text_value).nil? }
+      word &{|s| s[0].port_type.nil? }
+    end
+
+    rule comment
+      '#' [^\n]* "\n"
     end
 
     # required space
     rule rs
-      ([ \t] / ('#' .* "\n"))+
+      ([ \t\n] / comment)+
     end
 
     # optional space
     rule os
-      ([ \t] / ('#' .* "\n"))*
+      ([ \t\n] / comment)*
     end
 
     rule block_beg
@@ -46,67 +122,27 @@ module Zonk
     end
 
     rule digital_port
-      ('digital_input' / 'digital_output') rs new_port_name
+      ('digital_input' / 'digital_output') rs name:new_port_name rs <PortNode>
     end
 
     rule analog_port
-      ('analog_input' / 'analog_output') rs new_port_name
+      ('analog_input' / 'analog_output') rs name:new_port_name rs <PortNode>
     end
 
     rule timer_port
-      'timer' rs new_port_name
+      'timer' rs name:new_port_name rs <PortNode>
     end
 
     rule ticker_port
-      'ticker' rs new_port_name
+      'ticker' rs name:new_port_name rs <PortNode>
     end
 
     rule port
-      (digital_port / analog_port / timer_port / ticker_port) <PortNode>
-    end
-
-    rule event
-      'when' rs port_name rs 
-    end
-
-    rule primitive_condition
-      (!'and' word rs)*
-    end
-
-    rule condition
-      'if' primitive_condition ('and' rs primitive_condition)*
+      (digital_port / analog_port / timer_port / ticker_port)
     end
 
     rule boolean_literal
       ('true' / 'false' / '1' / '0' / [Oo] [Nn] / [Oo] [Ff] [Ff]) <BooleanLiteralNode>
-    end
-
-    rule action
-      name os '=' os 
-    end
-
-    rule rule_def
-      'rule' rs name block_beg
-        event
-        condition?
-        'then' block_beg
-          action*
-        block_end
-      block_end
-    end
-
-    rule table
-      'table' rs name block_beg
-        rule_def+
-      block_end
-    end
-
-    rule task
-      'task' rs name block_beg ports:port+ tables:table+ block_end <TaskNode>
-    end
-
-    rule application
-      'application' rs name block_beg tasks:task+ block_end <ApplicationNode>
     end
 
   end
