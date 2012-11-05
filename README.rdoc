@@ -1,1 +1,1 @@
-Zonk/README.txt
+Zonk/README.rdoc
