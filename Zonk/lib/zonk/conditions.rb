@@ -53,6 +53,8 @@ module Zonk
       @method = rcvr.method(sym)
     end
 
+    attr_reader :method
+
     def value
       begin
         @method.call == true

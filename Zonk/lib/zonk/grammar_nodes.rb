@@ -112,8 +112,10 @@ class ApplicationNode < ZonkGrammarNode
 
   def generate_ruby(owner=nil)
     puts("require 'zonk'\n")
+    puts("def make_application")
     super
     tasks.elements.each { |task| task.generate_ruby(self) }
+    puts("return #{name.text_value}\nend")
   end
 
 end

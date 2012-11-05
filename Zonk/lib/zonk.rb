@@ -15,6 +15,8 @@ require_relative 'zonk/io_pins'
 require_relative 'zonk/target'
 require_relative 'zonk/application'
 
+require_relative 'zonk/html_table.rb'
+
 # Namespace for all Zonk classes
 module Zonk
   VERSION = '0.1.0'

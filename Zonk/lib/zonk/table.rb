@@ -15,12 +15,6 @@ module Zonk
       _owner.add_table(self)
     end
 
-    # TODO move this
-    def initialize_target
-      super
-      @current_rule = nil
-    end
-
     attr_reader :rules, :current_rule
 
     alias :task :owner

@@ -30,5 +30,10 @@ module Zonk
       # TODO enqueue table exit event
     end
 
+    def initialize_target
+      super
+      @current_rule = nil
+    end
+
   end
 end

@@ -23,6 +23,11 @@ task :compiler_test => [ 'lib/zonk/grammar.rb', 'examples/simple_task.rb' ] do
   ruby('-Ilib', 'examples/simple_task.rb')
 end
 
+desc 'test html'
+task :html_test => [ :compiler_test ] do
+  ruby('-Ilib:examples', 'bin/make_html.rb')
+end
+
 # Compile a Treetop .tt file into a Ruby file
 rule '.rb' => [ '.tt' ] do |t|
   sh "tt -o #{t.name} #{t.source}"
