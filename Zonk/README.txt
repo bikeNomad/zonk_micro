@@ -24,6 +24,7 @@ Eventually Zonk will have:
 
 * Ruby 1.9
 * Sinatra gem
+* simplecov gem for coverage analysis
 
 == LICENSE:
 
