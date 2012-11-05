@@ -1,7 +1,7 @@
-/.redcar
+Zonk/.redcar
 /ri
 /doc
 *.swp
-/tags
-/coverage
+Zonk/tags
+Zonk/coverage
 .DS_Store
