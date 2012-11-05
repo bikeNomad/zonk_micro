@@ -1,6 +1,6 @@
 = Zonk Micro
 
-* More information eventually at the {Zonk Homepage}[http://nedkonz.com/zonk]
+* More information eventually at the {Zonk Micro Homepage}[http://nedkonz.com/zonk]
 
 == DESCRIPTION:
 
