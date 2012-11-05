@@ -1,0 +1,7 @@
+/.redcar
+/ri
+/doc
+*.swp
+/tags
+/coverage
+.DS_Store
