@@ -1,13 +1,14 @@
-= Zonk
+= Zonk Micro
 
 * More information eventually at the {Zonk Homepage}[http://nedkonz.com/zonk]
 
 == DESCRIPTION:
 
-Zonk is an open-source microcontroller programming system for non-programmers
+Zonk Micro is an open-source microcontroller programming system for non-programmers
 (or people who don't want to learn to be programmers).
 
-Eventually Zonk will have:
+Eventually Zonk Micro will have:
+
 * Web-based IDE for programming and debugging
 * Support for both PC-based (via data acquisition modules) and autonomous (microcontroller-resident) operation
 * Ability to re-use task code directly on other targets
