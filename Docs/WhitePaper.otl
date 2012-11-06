@@ -1,0 +1,161 @@
+Why
+	empower people to solve problems and make things that are interesting to them
+	microcontrollers are powerful tools
+	programming them is within the reach of many non-programmers
+	but there haven't been widely available tools for non-programmers to do this
+	pedagogical: encourage further learning
+	increase self-efficacy
+Who
+	Audience
+		People who aren't programmers
+			and don't necessarily want to be
+		Infrequent users
+		Educators
+		Kids
+	Difference between needs/abilities of non-programmers and CS people
+		differing personality types
+What
+	Goals and Desired Traits
+		Desired Traits
+			Incremental
+				can start with simulation
+				adding real I/O via target hardware
+				immediately ready to test after edits
+			Always Live
+				shorten the edit/test/debug cycle
+			Collaborative
+				Allows for recording and playback
+					IO and other events
+					State transitions
+					Messaging
+					Synchronized audio/video capture
+				Sharing of behaviors
+					allows users to extend capability of system for others
+			Maximal visibility
+				reduce/eliminate hidden state
+				avoid large, invisible vocabulary
+					tension between visibility and size of vocabulary
+					Scratch, etc. had to choose most useful tiles
+			Extensibility
+				tension between Extensibility and vocabulary size
+			Alternative views
+				allow for different cognitive styles
+				can see detail differently
+			Allow for fluency
+				avoid having "training wheels welded on" (Alan Kay)
+				perhaps have text view or at least alternate views available
+			Concrete and transparent
+				make as much as possible touchable and visible
+			Supports entire workflow
+				help with sensor/actuator selection
+				help with electronic connection
+				help with design patterns
+	Functions
+		Target Setup and Connection
+		Program Editing
+			provide versioning support natively
+			trace provenance of program to allow crediting users
+			offer different views
+		Simulation
+		Debugging
+			answer "why did..." and "why didn't..." questions from trace data
+		Playback
+			animation of what happened
+			play back input trace alone to see if changed program would do the right thing
+		Remote Assistance and Collaboration
+			Importance of Collaboration and Community
+				one thing that Arduino have done right
+				allow users at different levels to help each other
+				allow sharing of behavior in a modular, understandable way
+					vs. text copying (e.g. Arduino)
+				allow collaborative debugging
+					remote debugging
+					playback of debug traces
+				allow extending help system
+How
+	User Program Structure
+		Applications
+			Tasks
+				Tables
+					Rules
+						Events
+						Conditions
+						Actions
+		Target Connection
+	Runtime Program Operation
+		Application to Target (port to pin) mapping
+		Event detection
+		Table interpretation/execution
+		Trace Data
+			collection
+			communication
+	Operational Modes
+		Simulation
+			all I/O simulated
+			execution on desktop
+			not sure if I/O simulations also scriptable
+		IO Slave (via tether)
+			allows for incremental testing of input/output devices
+				hardware maybe not ready yet, or not working
+			execution on desktop
+			some or all I/O can be simulated
+			can choose to force input state of switch/sensor for test/debug
+			can choose to drive outputs directly for testing
+		Tethered Autonomous
+			execution on target system
+			otherwise same environment as IO Slave
+			benefits:
+				verify speed requirements
+				verify memory requirements
+			can still have some simulated I/O (on desktop)
+		Untethered Autonomous
+			all I/O real and on target
+			execution on target system
+			Data logging for playback
+				memory allowing, of course
+				allows connection of tether for debugging
+	User Workflow
+		Editing
+			Different views
+				Decision Table
+				State Diagram
+				Textual
+		Debugging / Playback
+			Simulation
+			Trace Playback
+			Answering "why did" / "why didn't" questions
+		Publishing / Collaboration
+			Sharing behaviors
+				Shared at the Task level
+			Sharing Traces
+				Attaching notes and video to traces
+		Target Setup and Connection Assistance
+		Connecting Targets to Applications
+Related Work
+	Tile Scripting Systems
+		advantages
+			no syntax errors
+				important for kids especially
+		disadvantages
+			typically non-extensible
+		examples
+			eToys
+			Scratch (MIT Media Lab)
+			Google Blockly
+			12Blocks (oneRobot)
+	Text programming systems
+		advantages
+			more expressive
+		disadvantages
+			steeper, longer learning curve
+			syntax, library can be problem for kids
+				vocabulary choices not necessarily visible
+		examples
+			Arduino
+			BASIC
+				parallax: propeller
+	Dataflow systems
+		examples
+			Flowstone
+			Labview
+			Ptolemy II
