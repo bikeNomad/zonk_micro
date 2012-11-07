@@ -14,7 +14,10 @@ module Zonk
     public
     def initialize
       super
-      @pins = {}
+      @pins = {}  # pin name => pin
+      @application = nil
+      @pin_map = {}   # pin => port
+      @port_map = {}  # port => pin
     end
 
     # return all of my pins' names
@@ -29,6 +32,16 @@ module Zonk
     def pin_named(_name)
       @pins[_name]
     end
+
+    def add_application(app)
+      @application = app
+    end
+
+    def connect_pin_to_port(pin, port)
+      @pin_map[pin] = port
+      @port_map[port] = pin
+    end
+
   end
 end
 

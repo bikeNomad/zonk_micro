@@ -8,11 +8,11 @@ module Zonk
     def initialize_target
       super
     end
-
-    # Run the app, on the host
-    def run!
-      # TODO
-    end
-
   end
+
+  class Target < Base
+    def run!
+    end
+  end
+
 end
