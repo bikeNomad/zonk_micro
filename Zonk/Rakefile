@@ -60,4 +60,9 @@ task :simplecov do
     " -e '#{tests.join("; ")}'"
 end
 
+desc 'run server'
+task :server do
+  ruby '-Ilib:server', 'server/zonk_server.rb'
+end
+
 # vim: syntax=ruby
