@@ -1,4 +1,4 @@
-table.ruletable {
+table {
 	border: 1px solid black;
 	border-collapse: collapse;
 	font-family: "Verdana", "Helvetica";
@@ -31,4 +31,24 @@ tr.separator td {
 	border: none;
 	background-color: #CCC;
 	padding-top: 10px;
+}
+
+div.table, div.io {
+	color: #FFF;
+	margin-top: 20px;
+	padding: 10px;
+	width: 100%;
+}
+
+table.io td {
+	width: 5em;
+}
+
+table.io td p {
+	margin-bottom: 2px;
+}
+
+table.io input[type="text"] {
+	width: 30px;
+	margin-right: 4px;
 }

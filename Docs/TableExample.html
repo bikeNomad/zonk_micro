@@ -10,136 +10,99 @@
   </style>
 </head>
 <body lang="en-US" dir="ltr">
-  <div width="100%">
+  <H1>Task "Police Car"</H1>
+    <h2>Inputs and Outputs</h2>
+  <div width="100%" class="io">
+    <table class="io">
+      <tr>
+        <td>Digital Input</td>
+        <td>Digital Output</td>
+        <td>Digital Output</td>
+        <td>Tone Output</td>
+        <td>Timer</td>
+      </tr>
+      <tr>
+        <td>
+          <p>Button</p>
+          <input type="checkbox" name="Button" value="1">ON<BR>
+          <input type="checkbox" name="ForceButton" value="1">FORCE
+        </td>
+          <td>
+            <p>Red LED</p>
+            <input type="checkbox" name="Red LED" value="1">ON<BR>
+            <input type="checkbox" name="ForceRed LED" value="1">FORCE
+          </td>
+          <td>
+            <p>Blue LED</p>
+            <input type="checkbox" name="Blue LED" value="1">ON<BR>
+            <input type="checkbox" name="ForceBlue LED" value="1">FORCE
+          </td>
+          <td>
+            <p>Siren</p>
+            <input type="text" name="Siren" value="500" width="40px">TONE<BR>
+            <input type="checkbox" name="ForceBlue LED" value="1">FORCE
+          </td>
+          <td>
+            <p>Timer1</p>
+            <input type="text" name="Timer1" value="250" width="40px">TIME<BR>
+            <input type="checkbox" name="ForceBlue LED" value="1">TICKED
+          </td>
+          </tr>
+    </table>
+  </div>
+  <h2>Rule Table 1</h2>
+  <div width="100%" class="table">
     <table class="ruletable">
-      <colgroup>
-        <col width="100px">
-      </colgroup>
       <tr class="rulename">
-        <th></th>
         <th></th>
         <th>Rule 1</th>
         <th>Rule 2</th>
         <th>Rule 3</th>
-        <th>Rule 4</th>
-        <th>Rule 5</th>
       </tr>
-      <tr class="separator"><td colspan="7">EVENTS:</td></tr>
-      <tr class="event">
-        <th></th>
-        <th class="rowlabel"></th>
-        <td>100 ms Ticker.ticked</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr class="separator"><td colspan="7">INPUTS:</td></tr>
+      <tr class="separator"><td colspan="4">INPUTS:</td></tr>
       <tr class="input">
-        <td>
-          <input type="checkbox" name="Input1" value="1">ON<BR>
-          <input type="checkbox" name="ForceInput1" value="1">FORCE
-        </td>
-        <td>Input 1</td>
+        <td>Timer1</td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>ENDED</td>
+        <td>ENDED</td>
       </tr>
       <tr class="input">
-        <td>
-          <input type="checkbox" name="Input2" value="1">ON<BR>
-          <input type="checkbox" name="ForceInput2" value="1">FORCE
-        </td>
-        <td>Input 2</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>Button</td>
+        <td>OFF</td>
+        <td>ON</td>
+        <td>ON</td>
       </tr>
       <tr class="input">
-        <td>
-          <input type="checkbox" name="Input3" value="1">ON<BR>
-          <input type="checkbox" name="ForceInput3" value="1">FORCE
-        </td>
-        <td>Input 3</td>
+        <td>Red LED</td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>IS ON</td>
+        <td>IS OFF</td>
       </tr>
-      <tr class="input">
-          <td>
-    <input type="checkbox" name="Output1" value="1">ON<BR>
-    <input type="checkbox" name="ForceOutput1" value="1">FORCE
-  </td>
-        <td>Output 1</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+
+      <tr class="separator"><td colspan="4">OUTPUTS:</td></tr>
+      <tr class="output">
+        <td>Red LED</td>
+        <td>OFF</td>
+        <td>OFF</td>
+        <td>ON</td>
       </tr>
-      <tr class="input">
-          <td>
-    <input type="checkbox" name="Output2" value="1">ON<BR>
-    <input type="checkbox" name="ForceOutput2" value="1">FORCE
-  </td>
-        <td>Output 2</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+      <tr class="output">
+        <td>Blue LED</td>
+        <td>OFF</td>
+        <td>ON</td>
+        <td>OFF</td>
       </tr>
-      <tr class="separator"><td colspan="7">OUTPUTS:</td></tr>
-      <tr >
-        <td></td>
-        <td>Output 1</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+      <tr class="output">
+        <td>Siren</td>
+        <td>OFF</td>
+        <td>750</td>
+        <td>500</td>
       </tr>
-      <tr >
-        <td></td>
-        <td>Output 2</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr >
-        <td></td>
-        <td>Output 3</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr >
-        <td></td>
-        <td>Output 4</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr >
-        <td></td>
-        <td>Table</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+      <tr class="output">
+        <td>Timer1</td>
+        <td>RESET</td>
+        <td>START</td>
+        <td>START</td>
       </tr>
     </table>
   </div>

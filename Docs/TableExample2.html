@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!-- vim: ts=2 sw=2 et
+-->
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=us-ascii">
+  <title>Task Table Example</title>
+  <link rel="stylesheet" type="text/css" href="TableExample.css">
+  <style type="text/css">
+  </style>
+</head>
+<body lang="en-US" dir="ltr">
+  <H1>Task "Police Car 2"</H1>
+    <h2>Inputs and Outputs</h2>
+  <div width="100%" class="io">
+    <table class="io">
+      <tr>
+        <td>Digital Input</td>
+        <td>Digital Output</td>
+        <td>Digital Output</td>
+        <td>Tone Output</td>
+        <td>Timer</td>
+      </tr>
+      <tr>
+        <td>
+          <p>Button</p>
+          <input type="checkbox" name="Button" value="1">ON<BR>
+          <input type="checkbox" name="ForceButton" value="1">FORCE
+        </td>
+          <td>
+            <p>Red LED</p>
+            <input type="checkbox" name="Red LED" value="1">ON<BR>
+            <input type="checkbox" name="ForceRed LED" value="1">FORCE
+          </td>
+          <td>
+            <p>Blue LED</p>
+            <input type="checkbox" name="Blue LED" value="1">ON<BR>
+            <input type="checkbox" name="ForceBlue LED" value="1">FORCE
+          </td>
+          <td>
+            <p>Siren</p>
+            <input type="text" name="Siren" value="0" width="40px">TONE<BR>
+            <input type="checkbox" name="ForceSiren" value="1">FORCE
+          </td>
+          <td>
+            <p>Timer1</p>
+            <input type="text" name="Timer1" value="250" width="40px">TIME<BR>
+            <input type="checkbox" name="ForceTimer1" value="1">TICKED
+          </td>
+          </tr>
+    </table>
+  </div>
+  <h2>Table "Waiting For Button"</h2>
+  <div width="100%" class="table">
+    <table class="ruletable">
+      <tr class="rulename">
+        <th></th>
+        <th>Rule 1</th>
+        <th>Rule 2</th>
+      </tr>
+      <tr class="separator"><td colspan="3">INPUTS:</td></tr>
+      <tr class="input">
+        <td>Table</td>
+        <td>ENTERED</td>
+        <td></td>
+      </tr>
+      <tr class="input">
+        <td>Button</td>
+        <td></td>
+        <td>ON</td>
+      </tr>
+
+      <tr class="separator"><td colspan="3">OUTPUTS:</td></tr>
+      <tr class="output">
+        <td>Red LED</td>
+        <td>OFF</td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Blue LED</td>
+        <td>OFF</td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Siren</td>
+        <td>OFF</td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Table</td>
+        <td></td>
+        <td>&rarr;"Red ON"</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Table "Red ON"</h2>
+  <div width="100%" class="table">
+    <table class="ruletable">
+      <tr class="rulename">
+        <th></th>
+        <th>Rule 1</th>
+        <th>Rule 2</th>
+        <th>Rule 3</th>
+      </tr>
+      <tr class="separator"><td colspan="4">INPUTS:</td></tr>
+      <tr class="input">
+        <td>Table</td>
+        <td>ENTERED</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="input">
+        <td>Button</td>
+        <td></td>
+        <td>OFF</td>
+        <td></td>
+      </tr>
+      <tr class="input">
+        <td>Timer1</td>
+        <td></td>
+        <td></td>
+        <td>ENDED</td>
+      </tr>
+
+      <tr class="separator"><td colspan="4">OUTPUTS:</td></tr>
+      <tr class="output">
+        <td>Red LED</td>
+        <td>ON</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Blue LED</td>
+        <td>OFF</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Siren</td>
+        <td>750</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Timer1</td>
+        <td>START(250)</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Table</td>
+        <td></td>
+        <td>&rarr;"Waiting For Button"</td>
+        <td>&rarr;"Blue ON"</td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>Table "Blue ON"</h2>
+  <div width="100%" class="table">
+    <table class="ruletable">
+      <tr class="rulename">
+        <th></th>
+        <th>Rule 1</th>
+        <th>Rule 2</th>
+        <th>Rule 3</th>
+      </tr>
+      <tr class="separator"><td colspan="4">INPUTS:</td></tr>
+      <tr class="input">
+        <td>Table</td>
+        <td>ENTERED</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="input">
+        <td>Button</td>
+        <td></td>
+        <td>OFF</td>
+        <td></td>
+      </tr>
+      <tr class="input">
+        <td>Timer1</td>
+        <td></td>
+        <td></td>
+        <td>ENDED</td>
+      </tr>
+
+      <tr class="separator"><td colspan="4">OUTPUTS:</td></tr>
+      <tr class="output">
+        <td>Red LED</td>
+        <td>OFF</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Blue LED</td>
+        <td>ON</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Siren</td>
+        <td>500</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Timer1</td>
+        <td>START(250)</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="output">
+        <td>Table</td>
+        <td></td>
+        <td>&rarr;"Waiting For Button"</td>
+        <td>&rarr;"Red ON"</td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
