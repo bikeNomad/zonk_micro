@@ -1,1 +1,53 @@
-Zonk/README.rdoc
+= Zonk Micro
+
+* More information eventually at the {Zonk Micro Homepage}[http://nedkonz.com/zonk]
+
+== DESCRIPTION:
+
+Zonk Micro is an open-source microcontroller programming system for non-programmers
+(or people who don't want to learn to be programmers).
+
+Eventually Zonk Micro will have:
+
+* Web-based IDE for programming and debugging
+* Support for both PC-based (via data acquisition modules) and autonomous (microcontroller-resident) operation
+* Ability to re-use task code directly on other targets
+* Fine-grained simulation allowing simulated I/O and/or use of target hardware as an I/O slave
+* Simple rule-based programming, visible and editable as tables or text
+* Easy support of concurrency and stateful behavior
+* Post-mortem and real-time trace data collection
+* Ability to answer "why did..." and "why didn't..." questions about program behavior
+* Assistance for target connection to the real world
+
+== FEATURES/PROBLEMS:
+
+== REQUIREMENTS:
+
+* Ruby 1.9
+* Sinatra gem
+* simplecov gem for coverage analysis
+
+== LICENSE:
+
+(The MIT License)
+
+Copyright (c) 2012 Ned Konz
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
