@@ -5,6 +5,8 @@ Zonk! Micro
 
 ### Hackers Conference 2012
 
+### Warning: Mostly Vaporware!
+
 What is Zonk! Micro?
 ====================
 
@@ -23,7 +25,7 @@ What is Zonk! Micro?
 Audience
 ========
 
-### Non-Programmers
+### Audience
 
 - Gadgeteers
 - Kids
@@ -32,7 +34,12 @@ Audience
 - Industrial Designers
 - Everyone!
 
-### Programmers in a hurry
+### Competition
+
+- Arduino (C++ with library)
+- Modkit Micro (Tile programming, 1:1 with Arduino code)
+
+#### see <a href="../Comparison.html" target="blank">comparison</a> 
 
 Modes of operation
 ===============
@@ -161,6 +168,11 @@ Trace History View
   - Why did something unexpected happen?
   - Why didn't something happen as expected?
 
+Trace History View Example
+==========================
+
+![Trace Example](../TraceExample.png)
+
 Collaboration Support
 =================
 
@@ -188,21 +200,15 @@ Deployment Model
 
 Plans for the Future
 ===============
-
-### Make a working version!
-
-- Initial targets: Arduino, LabJack U3 (USB DAQ module), mbed (ARM Inc. microcontroller board) 
-
-### Decide on a business model
-
-- Prefer Open Source for practical reasons
-- Kickstarter funding?
-- Branded/target-specific versions for hardware suppliers
-- Free program; Subscription model for collaboration?
-
-### Online Presence
-
-- Offers access to collaboration tools
-- More cookbook entries for system design
-- Support forums
-- Application sharing
+- Make a working version!
+  - Initial targets: Arduino, LabJack U3 (USB DAQ module), mbed (ARM Inc. microcontroller board) 
+- Decide on a business model
+  - Prefer Open Source for practical reasons
+  - Kickstarter funding?
+  - Branded/target-specific versions for hardware suppliers
+  - Free program; Subscription model for collaboration?
+- Online Presence
+  - Offers access to collaboration tools
+  - More cookbook entries for system design
+  - Support forums
+  - Application sharing

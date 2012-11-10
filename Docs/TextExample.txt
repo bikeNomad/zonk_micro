@@ -1,0 +1,44 @@
+application myapp {
+  task PoliceCar {
+    digital_input   Button
+    digital_output  RedLED
+    digital_output  BlueLED
+    tone_output     Siren
+    timer           Timer1
+
+    table table1 {
+      rule Rule1 {
+        when Button.is_off
+        then {
+          RedLED.off
+          BlueLED.off
+          Siren.off
+          Timer1.reset
+        }
+      }
+
+      rule Rule2 {
+        when Timer1.ended
+            and Button.is_on
+            and RedLED.is_on
+        then {
+            RedLED.off
+            BlueLED.on
+            Siren.tone(750)
+            Timer1.start
+        }
+      }
+      rule Rule3 {
+        when Timer1.ended
+            and Button.is_on
+            and RedLED.is_off
+        then {
+            RedLED.on
+            BlueLED.off
+            Siren.tone(500)
+            Timer1.start
+        }
+      }
+    }
+  }
+}
