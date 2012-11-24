@@ -5,7 +5,9 @@ Zonk! Micro
 
 ### Hackers Conference 2012
 
-### Warning: Mostly Vaporware!
+### _Warning: Mostly Vaporware!_
+
+#### https://github.com/bikeNomad/zonk_micro.git
 
 What is Zonk! Micro?
 ====================

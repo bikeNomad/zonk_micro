@@ -3,3 +3,7 @@ From Dale:
 	* fault injection for testing
 	* simulated faults
 	* add rules to prevent from e.g. output on too long 
+
+SensorML
+
+

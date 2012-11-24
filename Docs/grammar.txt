@@ -1,0 +1,34 @@
+Events
+	InputPort
+		DigitalInputPort
+			.went(:on?)
+			.went(:off?)
+			.changed
+		AnalogInputPort
+			.changed_by(val)
+			.went(:above(val))
+			.went(:below(val))
+		OutputPort
+			DigitalOutputPort
+			AnalogOutputPort
+Conditions
+	InputPort
+		DigitalInputPort
+			.on?
+			.off?
+		AnalogInputPort
+			.above?(val)
+			.below?(val)
+			.between?(lo,hi)
+			.outside?(lo,hi)
+		OutputPort
+			DigitalOutputPort
+			AnalogOutputPort
+Actions
+	InputPort
+		DigitalInputPort
+		AnalogInputPort
+		OutputPort
+			DigitalOutputPort
+			AnalogOutputPort
+# vim: ft=otl
