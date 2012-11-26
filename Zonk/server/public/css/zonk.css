@@ -1,0 +1,67 @@
+body {
+	font-family: "Helvetica";
+	font-size: 1em;
+}
+
+#toolbox {
+	width: 200px;
+	height: 100%;
+	background-color: #889cc5;
+	padding: 8px;
+	margin: 8px;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
+#toolbox p {
+	margin: 0px;
+}
+
+#toolbox div {
+	margin: 4px;
+}
+
+#toolbox div div {
+	margin: 8px;
+	padding: 4px;
+}
+
+div.addinput div {
+	background-color: #76E076;
+}
+
+div.addoutput div {
+	background-color: #E7D60F;
+}
+
+div.addtask div {
+	background-color: #0FE7E7;
+}
+
+#toolbox div.inputs, #toolbox div.outputs {
+	min-height: 200px;
+	padding: 4px;
+	margin: 8px;
+	margin-top: 12px;
+	border: 1px black;
+}
+
+#toolbox div.inputs {
+	background-color: #76E076;
+}
+
+#toolbox div.outputs {
+	background-color: #E7D60F;
+}
+
+#task_editor {
+	background-color: #e0e0e0;
+	display: inline;
+	position: absolute;
+	left: 224px;
+	top: 0px;
+	margin: 8px;
+	padding: 8px;
+}
+
