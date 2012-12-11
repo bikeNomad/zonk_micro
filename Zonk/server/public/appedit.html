@@ -13,25 +13,25 @@
 <div id="toolbox">
 <div class="addtask">
 	Add a Task:
-	<div class="addtask" id="add_task">+ Task</div>
+	<div data-action="addTask" id="add_task">+ Task</div>
 </div>
 
 <div class="addinput">
 	Add an Input:
-	<div id="add_digital_input">+ Digital Input</div>
-	<div id="add_analog_input">+ Analog Input</div>
-	<div id="add_input_variable">+ Variable Input</div>
-	<div id="add_input_event">+ Event Input</div>
+	<div id="add_digital_input" data-action="addInput DigitalInput">+ Digital Input</div>
+	<div id="add_analog_input" data-action="addInput AnalogInput">+ Analog Input</div>
+	<div id="add_variable_input" data-action="addInput VariableInput">+ Variable Input</div>
+	<div id="add_event_input" data-action="addInput EventInput">+ Event Input</div>
 </div>
 
 <div class="addoutput">
 	Add an Output:
-	<div id="add_digital_output">+ Digital Output</div>
-	<div id="add_analog_output">+ Analog Output</div>
-	<div id="add_output_variable">+ Variable Output</div>
-	<div id="add_output_event">+ Event Output</div>
-	<div id="add_ticker">+ Ticker</div>
-	<div id="add_timer">+ Timer</div>
+	<div data-action="addOutput DigitalOutput">+ Digital Output</div>
+	<div data-action="addOutput AnalogOutput">+ Analog Output</div>
+	<div data-action="addOutput OutputVariable">+ Variable Output</div>
+	<div data-action="addOutput OutputEvent">+ Event Output</div>
+	<div data-action="addOutput Ticker">+ Ticker</div>
+	<div data-action="addOutput Timer">+ Timer</div>
 </div>
 
 <div class="inputs">
@@ -42,12 +42,7 @@
 </div>
 
 </div>
-<div id="task_editor">
-	<p>Task 1</p>
-	<table>
-		<tr><td>I/O</td><td>add rule</td></tr>
-		<tr><td></td><td></td></tr>
-	</table>
+<div id="task_editors">
 </div>
 </body>
 </html>
