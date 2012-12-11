@@ -4,13 +4,10 @@
 
 var Zonk_Base = new Class({
     name: null,
-    owner: null,
 
-    initialize: function(name, owner) {
+    initialize: function(name) {
         this.name = name;
-        this.owner = owner;
     },
-
 });
 
 var Zonk_Port = new Class({
@@ -18,9 +15,10 @@ var Zonk_Port = new Class({
 
     capabilities: [],
     valueRange: [],
+    className: '',
 
-    initialize: function(name, owner) {
-        this.parent(name, owner);
+    initialize: function(name) {
+        this.parent(name);
     },
 
     // return true if val is within my valueRange
@@ -39,18 +37,18 @@ var Zonk_Port = new Class({
 
 var Zonk_InputPort = new Class({
     Extends: Zonk_Port,
+    capabilities: ['input'],
 
-    initialize: function(name, owner) {
-        this.parent(name, owner);
-        this.capabilities = ['input'];
+    initialize: function(name) {
+        this.parent(name);
     }
 });
 
 var Zonk_OutputPort = new Class({
     Extends: Zonk_InputPort,
 
-    initialize: function(name, owner) {
-        this.parent(name, owner);
+    initialize: function(name) {
+        this.parent(name);
         this.capabilities.append(['output']);
     }
 });
@@ -58,7 +56,6 @@ var Zonk_OutputPort = new Class({
 var Zonk_DigitalPort = new Class({
     valueRange: [false, true],
     conditions: [ ['isOff'], ['isOn'], ['==', [false,true]] ],
-
     isOn: function() { this.value() == true; },
     isOff: function() { this.value() == false; },
 });
@@ -75,36 +72,40 @@ var Zonk_AnalogPort = new Class({
 var Zonk_DigitalInput = new Class({
     Extends: Zonk_InputPort,
     Implements: Zonk_DigitalPort,
+    className: 'Zonk_DigitalInput',
 
-    initialize: function(name, owner) {
-        this.parent(name, owner);
+    initialize: function(name) {
+        this.parent(name);
     }
 });
 
 var Zonk_DigitalOutput = new Class({
     Extends: Zonk_OutputPort,
     Implements: Zonk_DigitalPort,
+    className: 'Zonk_DigitalOutput',
 
-    initialize: function(name, owner) {
-        this.parent(name, owner);
+    initialize: function(name) {
+        this.parent(name);
     }
 });
 
 var Zonk_AnalogInput = new Class({
     Extends: Zonk_InputPort,
     Implements: Zonk_AnalogPort,
+    className: 'Zonk_AnalogInput',
 
-    initialize: function(name, owner) {
-        this.parent(name, owner);
+    initialize: function(name) {
+        this.parent(name);
     }
 });
 
 var Zonk_AnalogOutput = new Class({
     Extends: Zonk_OutputPort,
     Implements: Zonk_AnalogPort,
+    className: 'Zonk_AnalogOutput',
 
-    initialize: function(name, owner) {
-        this.parent(name, owner);
+    initialize: function(name) {
+        this.parent(name);
     }
 });
 
@@ -125,8 +126,8 @@ var Zonk_Rule = new Class({
     conditions: [],
     actions: [],
 
-    initialize: function(name, task)  {
-        this.parent(name, task);
+    initialize: function(name)  {
+        this.parent(name);
     },
 });
 
@@ -134,8 +135,8 @@ var Zonk_Rule = new Class({
 var Zonk_Table = new Class({
     Extends: Zonk_Base,
 
-    initialize: function(name, task)  {
-        this.parent(name, task);
+    initialize: function(name)  {
+        this.parent(name);
     },
 
     rules: [],
@@ -157,8 +158,9 @@ var Zonk_Task = new Class({
     Extends: Zonk_Base,
 
     initialize: function(name, application) {
-        this.parent(name, application);
-        application.addTask(this);
+        this.parent(name);
+        if (application)
+            application.addTask(this);
     },
 
     ports: [],
@@ -167,17 +169,14 @@ var Zonk_Task = new Class({
 
     addPort: function(port) {
         this.ports << port;
-        port.owner = this;
     },
 
     addTable: function(table) {
         this.tables << table;
-        table.owner = this;
     },
 
     addTimer: function(timer) {
         this.timers << timer;
-        timer.owner = this;
     },
 
     getOutputs: function() {
@@ -197,20 +196,14 @@ var Zonk_Task = new Class({
 var Zonk_Application = new Class({
     Extends: Zonk_Base,
 
-    initialize: function(name, target) {
-        this.parent(name, target);
+    initialize: function(name) {
+        this.parent(name);
     },
-
-    // called by document.id(theApp) to construct an element
-    // toElement: function() { },
 
     tasks: [],
 
     addTasks: function(tasks) {
-        tasks.each(function(task) {
-            this.tasks.include(task);
-            task.application = this;
-        }, this);
+        tasks.each(function(task) { this.tasks.include(task); }, this);
     },
 
     addTask: function(task) {
@@ -225,9 +218,11 @@ var Zonk_Application = new Class({
 //  Target class
 var Zonk_Target = new Class({
     name: null,
+    application: null,
 
-    initialize: function(name) {
+    initialize: function(name, app) {
         this.name = name;
+        this.application = app;
     },
 });
 
