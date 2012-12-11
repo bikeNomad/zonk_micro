@@ -6,7 +6,7 @@ var Zonk_Base = new Class({
     name: null,
     owner: null,
 
-    initialize = function(name, owner) {
+    initialize: function(name, owner) {
         this.name = name;
         this.owner = owner;
     },

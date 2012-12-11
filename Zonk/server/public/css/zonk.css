@@ -56,6 +56,23 @@ div.addtask div {
 }
 
 table.task_editor {
+    border: 1px solid black;
+    margin: 10px;
+    padding: 4px;
+}
+
+table.task_editor tbody {
+    border: 1px solid black;
+    padding: 2px;
+}
+
+table.task_editor tbody.task_inputs {
+    background-color: #76E076;
+}
+
+table.task_editor tbody.task_outputs {
+	background-color: #E7D60F;
+    margin-top: 4px;
 }
 
 #task_editors {
@@ -64,7 +81,6 @@ table.task_editor {
 	position: absolute;
 	left: 224px;
 	top: 0px;
-	margin: 8px;
-	padding: 8px;
+    margin: 8px;
 }
 
